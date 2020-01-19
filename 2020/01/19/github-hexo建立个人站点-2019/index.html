@@ -8,17 +8,23 @@
   <link rel="dns-prefetch" href="http://zh7.wang">
   <title>github+hexo建立个人站点(2019) | MaoChun&#39;s blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Hexo和博客主题Hexo 简介">
+  <meta name="description" content="HexoHexo 简介">
 <meta property="og:type" content="article">
 <meta property="og:title" content="github+hexo建立个人站点(2019)">
 <meta property="og:url" content="http://zh7.wang/2020/01/19/github-hexo%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E7%AB%99%E7%82%B9-2019/index.html">
 <meta property="og:site_name" content="MaoChun&#39;s blogs">
-<meta property="og:description" content="Hexo和博客主题Hexo 简介">
+<meta property="og:description" content="HexoHexo 简介">
+<meta property="og:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120001649857.png">
+<meta property="og:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002030737.png">
+<meta property="og:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002838594.png">
+<meta property="og:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002918448.png">
+<meta property="og:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120003256716.png">
 <meta property="article:published_time" content="2020-01-19T07:15:10.198Z">
-<meta property="article:modified_time" content="2020-01-19T16:04:00.961Z">
+<meta property="article:modified_time" content="2020-01-19T16:43:43.386Z">
 <meta property="article:author" content="毛春">
 <meta property="article:tag" content="建站">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120001649857.png">
   
     <link rel="alternative" href="/atom.xml" title="MaoChun&#39;s blogs" type="application/atom+xml">
   
@@ -178,7 +184,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Hexo和博客主题"><a href="#Hexo和博客主题" class="headerlink" title="Hexo和博客主题"></a>Hexo和博客主题</h3><h5 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h5><a id="more"></a>
+        <h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><h5 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h5><a id="more"></a>
 
 <ul>
 <li><p>Hexo安装</p>
@@ -202,9 +208,60 @@
 </ul>
 </li>
 </ul>
+<h3 id="搭建网站"><a href="#搭建网站" class="headerlink" title="搭建网站"></a>搭建网站</h3><h5 id="本地网站建立与测试"><a href="#本地网站建立与测试" class="headerlink" title="本地网站建立与测试"></a>本地网站建立与测试</h5><p>新建文件夹Hexo</p>
+<p>命令行进入该文件夹，并且进行初始化</p>
+<p><code>hexo init Hexo</code></p>
+<p>进入文件夹，新建站点所需文件：</p>
+<p><code>npm install</code></p>
+<p><strong>找到Hexo文件夹下_config.yml，该文件为网站主题配置文件，会在于github page关联以及切换主题用到</strong></p>
+<p>开启服务器：</p>
+<p><code>hexo g</code></p>
+<p><code>hexo s</code></p>
+<p>在浏览器中打开<a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a></p>
+<p><img src="C:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120001649857.png" alt="image-20200120001649857"></p>
+<h5 id="关联Github-Page"><a href="#关联Github-Page" class="headerlink" title="关联Github Page"></a>关联Github Page</h5><h6 id="创建github仓库"><a href="#创建github仓库" class="headerlink" title="创建github仓库"></a>创建github仓库</h6><p>在github中创建一个仓库（要先注册github账号）</p>
+<p><img src="C:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002030737.png" alt="image-20200120002030737"></p>
+<p><strong>注意</strong>：仓库名字要和用户名一致 <code>username.github.io</code></p>
+<h6 id="创建SSH-Keys"><a href="#创建SSH-Keys" class="headerlink" title="创建SSH Keys"></a>创建SSH Keys</h6><p><strong>首先</strong>：在用户主目录下（打开cmd显示的目录，一般为主目录）,看有没有.ssh目录。</p>
+<ul>
+<li><p>如果有,再看看这个目录下，有没有id_rsa和id_rsa.pub这两个文件,如果已经有了,可直接跳到下一步,</p>
+</li>
+<li><p>如果没有打开Git Bash,创建SSH Key</p>
+</li>
+</ul>
+<p>​       <code>$ ssh-keygen -t rsa -C &quot;youremail@xxx.com&quot;</code></p>
+<p>​       你需要把邮件地址换成你自己的邮件地址,然后一路回车,默认即可。</p>
+<p>​       如果一切顺利,可以在用户目录里找到.ssh目录 里面有id_rsa和id_rsa.pub两个文件</p>
+<p>这两个就是SSH Key的秘钥,id_rsa是私钥,id_rsa.pub是公钥。</p>
+<p><strong>接着</strong>：登录GitHub 打开Settings,添加Key 如图</p>
+<p><img src="C:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002838594.png" alt="image-20200120002838594"></p>
+<p><img src="C:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120002918448.png" alt="image-20200120002918448"></p>
+<p>点”Add SSH Key”,填上任意Title,在Key文本框里粘贴id_rsa.pub文件的内容，成功之后,你就能看到添加的Key。</p>
+<h6 id="关联github-page"><a href="#关联github-page" class="headerlink" title="关联github page"></a>关联github page</h6><p>复制ssh</p>
+<p><img src="C:%5CUsers%5Cmydre%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200120003256716.png" alt="image-20200120003256716"></p>
+<p>将hexo和github page关联</p>
+<ul>
+<li><p>在<strong>_config.yml</strong>文件中，将deploy修改为: （注意冒号之后有空格）</p>
+<p>type: git</p>
+<p>repository: <a href="mailto:git@github.com">git@github.com</a>:wzhappapp/wzhappapp.github.io.git</p>
+<p>branch: master</p>
+</li>
+</ul>
+<h6 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h6><p>接下来使用git bash来进行命令执行，在Hexo文件夹中打开git bash（右击后菜单内）。执行命令：</p>
+<p><code>npm install hexo-deployer-git --save</code></p>
+<p>发布:</p>
+<p><code>hexo g</code></p>
+<p><code>hexo d</code></p>
+<p>发布后，可在settings中的github page中找到博客主页地址</p>
 <h5 id="切换主题"><a href="#切换主题" class="headerlink" title="切换主题"></a>切换主题</h5><p>以主题yijia为例：</p>
 <p><code>git clone [https://github.com/litten/hexo-theme-yilia.git](https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Flitten%2Fhexo-theme-yilia.git) themes/yilia</code></p>
 <p>在<strong>_config.yml文件</strong>中修改theme: jiayi</p>
+<p>修改保存后，发布：</p>
+<p><code>hexo g</code></p>
+<p><code>hexo d</code></p>
+<h5 id="发布新文章"><a href="#发布新文章" class="headerlink" title="发布新文章"></a>发布新文章</h5><p>新建文章：</p>
+<p><code>hexo n &quot;my new post&quot;</code></p>
+<p>在source_post中打开my new post.md进行编辑保存后，发布即可</p>
 
       
 
