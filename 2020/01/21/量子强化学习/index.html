@@ -8,19 +8,22 @@
   <link rel="dns-prefetch" href="https://zh7.wang">
   <title>量子强化学习(Quantum Reinforcement learning) | MaoChun&#39;s blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文主要介绍">
+  <meta name="description" content="本文主要对董道毅等人于2008年发表的Quantum Reinforcement Learning 研究成果进行梳理，首先介绍了其基本机制，接着对主要改进进行（主要包括动作选择和策略更新方法）描述，最后给出了我自己的仿真结果。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="量子强化学习(Quantum Reinforcement learning)">
 <meta property="og:url" content="https://zh7.wang/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="MaoChun&#39;s blogs">
-<meta property="og:description" content="本文主要介绍">
+<meta property="og:description" content="本文主要对董道毅等人于2008年发表的Quantum Reinforcement Learning 研究成果进行梳理，首先介绍了其基本机制，接着对主要改进进行（主要包括动作选择和策略更新方法）描述，最后给出了我自己的仿真结果。">
+<meta property="og:image" content="https://zh7.wang/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Episode_Length.png">
+<meta property="og:image" content="https://zh7.wang/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Episode_Reward.png">
 <meta property="article:published_time" content="2020-01-21T07:57:57.000Z">
-<meta property="article:modified_time" content="2020-01-21T08:10:31.362Z">
+<meta property="article:modified_time" content="2020-01-21T08:48:16.960Z">
 <meta property="article:author" content="毛春">
 <meta property="article:tag" content="量子计算">
 <meta property="article:tag" content="强化学习">
 <meta property="article:tag" content="量子强化学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zh7.wang/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Episode_Length.png">
   
     <link rel="alternative" href="/atom.xml" title="MaoChun&#39;s blogs" type="application/atom+xml">
   
@@ -186,7 +189,32 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本文主要介绍</p>
+        <p>本文主要对董道毅等人于2008年发表的<a href="https://arxiv.org/abs/0810.3828" target="_blank" rel="noopener">Quantum Reinforcement Learning</a> 研究成果进行梳理，首先介绍了其基本机制，接着对主要改进进行（主要包括动作选择和策略更新方法）描述，最后给出了我自己的仿真结果。</p>
+<a id="more"></a>
+
+<h4 id="量子强化学习基本机制"><a href="#量子强化学习基本机制" class="headerlink" title="量子强化学习基本机制"></a>量子强化学习基本机制</h4><p>该研究中，量子强化学习同传统强化学习的主要差别在于：</p>
+<ol>
+<li>用特征状态（eigen states）和特征动作（eigen action）来表示传统强化学习中的状态和动作。</li>
+<li>量子强化学习中的状态可以是任意的叠加态，但是在传统强化学习中没有实际的意义。</li>
+<li>特征状态和特征动作的表示都在希尔伯特空间进行。</li>
+</ol>
+<h4 id="动作选择策略"><a href="#动作选择策略" class="headerlink" title="动作选择策略"></a>动作选择策略</h4><p>在量子强化学习中，动作处于叠加态，即：<br>$$<br>f(s) = |a^{n}\rangle= \sum\limits_{a=00\cdots 0}^{\stackrel{n}{\overbrace{11\cdots 1}}}C_a|a\rangle<br>$$<br>而动作选择，可基于量子力学中天然的机制，即量子坍缩。对叠加态的动作进行一次观测，即可以对应概率$|C_a|^2$坍缩到特征动作$|a\rangle$</p>
+<h4 id="策略更新方法"><a href="#策略更新方法" class="headerlink" title="策略更新方法"></a>策略更新方法</h4><p>​       该策略更新方法，主要基于量子计算中的 Grover Search 算法的核心部分，对每次选中的动作进行一次迭代，以增大其概率（同时更新其他动作概率），且每种特征动作对应的概率值不同，以达到良好的探索和利用之间的平衡。数学描述如下：</p>
+<ul>
+<li>首先，有等权重的叠加态动作：</li>
+</ul>
+<p>$$<br>|a_0^{(0)}\rangle = \frac{1}{\sqrt{2^n}}\left(\sum\limits^{\stackrel{n}{\overbrace{11\cdots 1}}}_{a=00\cdots 0}|a\rangle\right)<br>$$</p>
+<ul>
+<li>接着结和俩个酉变换：$U_a$ 和 $U_{a_0^{(0)}}$:<br>$$<br>U_a = I - 2|a\rangle\langle a|<br>$$</li>
+</ul>
+<p>$$<br>U_{a_0^{(n)}} = H^{\otimes n}(2|0\rangle\langle0| - I)H^{\otimes n} = 2|a_0\rangle\langle a_0^{(n)}| - I<br>$$</p>
+<p>​      得到：<br>$$<br>U_{Grov} =U_{a_0^{(n)}}U_a<br>$$</p>
+<ul>
+<li>以$U_{Grov}$对特征状态$|a\rangle$幅值进行$L =int(k(r+V(s’)))$次更新(k为小于1的正参数)：<br>$$<br>U_{Grov}^L = |a_0^{(n)}\rangle = sin[(2L + 1)\theta]|a\rangle + cos[(2L+1)\theta]|a^{\perp}\rangle<br>$$</li>
+</ul>
+<p>结合动作选择和策略更新的改进，对Q-Learning算法进行改进，该论文给出了可能的加速方法。</p>
+<h4 id="仿真结果"><a href="#仿真结果" class="headerlink" title="仿真结果"></a>仿真结果</h4><p><img src="/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Episode_Length.png" alt="Episode_Length"></p>
+<p><img src="/2020/01/21/%E9%87%8F%E5%AD%90%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Episode_Reward.png" alt="Episode_Reward"></p>
 
       
 
@@ -344,7 +372,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#量子强化学习基本机制"><span class="toc-number">1.</span> <span class="toc-text">量子强化学习基本机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#动作选择策略"><span class="toc-number">2.</span> <span class="toc-text">动作选择策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#策略更新方法"><span class="toc-number">3.</span> <span class="toc-text">策略更新方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#仿真结果"><span class="toc-number">4.</span> <span class="toc-text">仿真结果</span></a></li></ol>
                     </div>
                 </span>
             </div>
