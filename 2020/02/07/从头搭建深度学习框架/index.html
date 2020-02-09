@@ -6,16 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://zh7.wang">
-  <title>Tag: Jupyter Notebook | MaoChun&#39;s blogs</title>
+  <title>从头搭建深度学习框架(一) | MaoChun&#39;s blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="仰望太久，总忽视许多触目惊心的东西；低头瞟到的每一处场景，都会给梦想一个新的定义。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="MaoChun&#39;s blogs">
-<meta property="og:url" content="https://zh7.wang/tags/Jupyter-Notebook/index.html">
+  <meta name="description" content="该系列文章，将利用numpy简绍如何从头搭建一个深度学习框架。本文主要简绍张量、计算图、和自动后向传播的初步实现，以及如何利用其进行简单的神经网络训练任务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从头搭建深度学习框架(一)">
+<meta property="og:url" content="https://zh7.wang/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="MaoChun&#39;s blogs">
-<meta property="og:description" content="仰望太久，总忽视许多触目惊心的东西；低头瞟到的每一处场景，都会给梦想一个新的定义。">
+<meta property="og:description" content="该系列文章，将利用numpy简绍如何从头搭建一个深度学习框架。本文主要简绍张量、计算图、和自动后向传播的初步实现，以及如何利用其进行简单的神经网络训练任务。">
+<meta property="og:image" content="https://zh7.wang/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/CGraph.png">
+<meta property="og:image" content="https://zh7.wang/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/cg2.png">
+<meta property="article:published_time" content="2020-02-07T14:07:59.000Z">
+<meta property="article:modified_time" content="2020-02-09T15:07:00.953Z">
 <meta property="article:author" content="毛春">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zh7.wang/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/CGraph.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -155,69 +160,279 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-从头搭建深度学习框架" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/01/27/%E5%9C%A8Jupyter-Notebook-%E4%B8%AD%E4%BD%BF%E7%94%A8-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/" class="archive-article-date">
-  	<time datetime="2020-01-27T14:05:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/01/27/%E5%9C%A8Jupyter-Notebook-%E4%B8%AD%E4%BD%BF%E7%94%A8-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/">在Jupyter Notebook 中使用 虚拟环境</a>
+    <h1 class="article-title" itemprop="name">
+      从头搭建深度学习框架(一)
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">虚拟环境</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Jupyter Notebook</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Conda</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        <a href="/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" class="archive-article-date">
+  	<time datetime="2020-02-07T14:07:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>该系列文章，将利用numpy简绍如何从头搭建一个深度学习框架。本文主要简绍张量、计算图、和自动后向传播的初步实现，以及如何利用其进行简单的神经网络训练任务。</p>
+<a id="more"></a>
+<h2 id="张量"><a href="#张量" class="headerlink" title="张量"></a>张量</h2><p>​        在深度学习框架中，张量（Tensor）是深度学习框架最核心的数据结构，用来代表向量、矩阵和n维数据。并且包含各种操作，初步定义Tensor类如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tensor</span><span class="params">(object)</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,data)</span>:</span></span><br><span class="line">        self.data = np.array(data)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__add__</span><span class="params">(self,other)</span>:</span> <span class="comment">#other为Tensor类</span></span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data + other.data)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__repr__())</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__str__())</span><br></pre></td></tr></table></figure>
+<p>测试代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">print(x)</span><br><span class="line">[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">y = x + x</span><br><span class="line">print(y)</span><br><span class="line">[ <span class="number">2</span>  <span class="number">4</span>  <span class="number">6</span>  <span class="number">8</span> <span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<p>这是一个初步的数据结构，存储了Numpy Array的全部数据信息（self.data)， 并且支持加法操作</p>
+<h2 id="自动梯度计算（autograd）"><a href="#自动梯度计算（autograd）" class="headerlink" title="自动梯度计算（autograd）"></a>自动梯度计算（autograd）</h2><p>​        将后向传播的逻辑，添加到Tensor对象中，可实现初步的自动梯度计算方法，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tensor</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data, creators=None ,creation_op=None)</span>:</span></span><br><span class="line">        self.data = np.array(data)</span><br><span class="line">        self.creators = creators</span><br><span class="line">        self.creation_op = creation_op</span><br><span class="line">        self.grad = <span class="literal">None</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        self.grad = grad</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (self.creation_op == <span class="string">'add'</span>):</span><br><span class="line">            self.creators[<span class="number">0</span>].backward(grad)</span><br><span class="line">            self.creators[<span class="number">1</span>].backward(grad)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__add__</span><span class="params">(self, other)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data + other.data, creators=[self, other], creations_op=<span class="string">'add'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__repr__())</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__str__())</span><br><span class="line"></span><br><span class="line">x = Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">y = Tensor([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>])</span><br><span class="line">z = x + y</span><br><span class="line">z.backward(Tensor(np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])))</span><br></pre></td></tr></table></figure>
+<p>这里主要引入了俩个新概念：</p>
+<ul>
+<li><p><strong>计算图</strong>：每个张量有俩个新的性质，<code>creators</code> 和 <code>creation_op</code>。<code>creators</code> 用来记录，产生该张量的其他张量（父张量）。<code>reations_op</code> 是用来记录，产生该张量的操作名称。基于这俩个新的性质，在执行计算<code>z=x+y</code>时，会自动产生一个计算图，包括点x，y，z，和边（z-&gt;x 和 z-&gt;y）。边使用<code>creation_op</code>标记，以便于递归的进行后向传播梯度，如下图所示：</p>
+<p><img src="/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/CGraph.png" alt="计算图" style="zoom:50%;"></p>
+</li>
+<li><p><strong>利用计算图自动计算梯度</strong>：当你调用<code>z.backward()</code>时，该方法会基于产生z的操作，将梯度传递给其父节点x和y。对于加法而言，其导数为常数1，直接传递即可。</p>
+</li>
+</ul>
+<p>​        从代码中可以看到，因为 <code>.backward()</code>方法采用递归的形式执行，即每个点在拿到自动对应的梯度之后，会调用父节点执行<code>.backward()</code>，即实现了自动的后向传播过程。</p>
+<h2 id="对自动梯度计算进行改进，以支持对张量的多次调用"><a href="#对自动梯度计算进行改进，以支持对张量的多次调用" class="headerlink" title="对自动梯度计算进行改进，以支持对张量的多次调用"></a>对自动梯度计算进行改进，以支持对张量的多次调用</h2><h4 id="基础的自动梯度计算存在的问题"><a href="#基础的自动梯度计算存在的问题" class="headerlink" title="基础的自动梯度计算存在的问题"></a>基础的自动梯度计算存在的问题</h4><p>​        基础版的自动梯度计算，对于多次调用的张量进行梯度计算时，存在类似于多个进程执行过程中数据数据访问冲突的问题。如下计算图中，节点d和e并行的进行后向传播，如果节点d先将梯度传播给了b，那么c传播的梯度会覆盖d的梯度。这样子无法实现后向传播自动化过程，需要给对梯度更新过程进行改进，以支持并行性的更新梯度。</p>
+<p><img src="/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/cg2.png" style="zoom:50%;"></p>
+<p>测试代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a = Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">b = Tensor([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>])</span><br><span class="line">c = Tensor([<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>])</span><br><span class="line">d = a + b</span><br><span class="line">e = b + c</span><br><span class="line">f = d + e</span><br><span class="line">f.backward(Tensor(np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])))</span><br><span class="line">print(b.grad.data == np.array([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>]))</span><br><span class="line">array([<span class="literal">False</span>, <span class="literal">False</span>, <span class="literal">False</span>, <span class="literal">False</span>, <span class="literal">False</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="自动梯度计算改进"><a href="#自动梯度计算改进" class="headerlink" title="自动梯度计算改进"></a>自动梯度计算改进</h4><p>对于以上所述问题，需要对自动梯度计算过程进行有效的逻辑控制：</p>
+<ul>
+<li>在正向传播过程中，每个节点都对其拥有的子节点进行记录，便于对后向传播过程记录，引入<code>self.children = {}</code></li>
+<li>将梯度更新策略改为梯度累积</li>
+<li>在后向传播过程中，结合以上俩点进行，步骤如下：<ol>
+<li>对传递过梯度的节点进行记录，防止其再次进行传递（图中可能有环）。</li>
+<li>梯度累积。</li>
+<li>已经接收所有梯度的点，继续进行后向传播（调用<code>.bachward()</code>），否则继续等待进行梯度累积。</li>
+</ol>
+</li>
+</ul>
+<p>改进代码和注释如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tensor</span> <span class="params">(object)</span>:</span></span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,data,</span></span></span><br><span class="line"><span class="function"><span class="params">                 autograd=False,</span></span></span><br><span class="line"><span class="function"><span class="params">                 creators=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 creation_op=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 id=None)</span>:</span></span><br><span class="line">       </span><br><span class="line">        self.data = np.array(data)</span><br><span class="line">        self.creators = creators</span><br><span class="line">        self.creation_op = creation_op</span><br><span class="line">        self.grad = <span class="literal">None</span></span><br><span class="line">        self.autograd = autograd</span><br><span class="line">        self.children = &#123;&#125;</span><br><span class="line">        <span class="keyword">if</span>(id <span class="keyword">is</span> <span class="literal">None</span>):</span><br><span class="line">            id = np.random.randint(<span class="number">0</span>,<span class="number">100000</span>)</span><br><span class="line">        self.id = id</span><br><span class="line">        <span class="comment">#记录该点的父节点，即记录每个节点在每轮更新中，要进行的剩余梯度更新次数</span></span><br><span class="line">        <span class="keyword">if</span>(creators <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>):</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> creators:</span><br><span class="line">                <span class="keyword">if</span>(self.id <span class="keyword">not</span> <span class="keyword">in</span> c.children):</span><br><span class="line">                    c.children[self.id] = <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    c.children[self.id] += <span class="number">1</span></span><br><span class="line">	<span class="comment">#检查该点是否接收完所有梯度</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">all_children_grads_accounted_for</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> id,cnt <span class="keyword">in</span> self.children.items():</span><br><span class="line">            <span class="keyword">if</span>(cnt != <span class="number">0</span>):</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span>       </span><br><span class="line">       </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self,grad=None, grad_origin=None)</span>:</span></span><br><span class="line">        <span class="comment">#传入的数据均为 Tensor</span></span><br><span class="line">        <span class="keyword">if</span>(self.autograd):</span><br><span class="line">            <span class="keyword">if</span>(grad_origin <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>):</span><br><span class="line">                <span class="keyword">if</span>(self.children[grad_origin.id] == <span class="number">0</span>):</span><br><span class="line">                    <span class="keyword">raise</span> Exception(<span class="string">"cannot backprop 						more than once"</span>)</span><br><span class="line">                    <span class="comment">#检查该点是否可继续接收梯度</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    self.children[grad_origin.id] -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(self.grad <span class="keyword">is</span> <span class="literal">None</span>):<span class="comment">#梯度积累</span></span><br><span class="line">                self.grad = grad</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.grad += grad</span><br><span class="line">           <span class="comment">#如果梯度累计完毕，进行后向传播</span></span><br><span class="line">            <span class="keyword">if</span>(self.creators <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span></span><br><span class="line">               (self.all_children_grads_accounted_for() 				<span class="keyword">or</span> grad_origin <span class="keyword">is</span> <span class="literal">None</span>)):</span><br><span class="line">                <span class="keyword">if</span>(self.creation_op == <span class="string">'add'</span>):</span><br><span class="line">                    self.creators[<span class="number">0</span>].backward(self.grad, self)</span><br><span class="line">                    self.creators[<span class="number">1</span>].backward(self.grad, self)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__add__</span><span class="params">(self, other)</span>:</span></span><br><span class="line">        <span class="keyword">if</span>(self.autograd <span class="keyword">and</span> other.autograd):</span><br><span class="line">            <span class="keyword">return</span> Tensor(self.data+other.data, autograd=<span class="literal">True</span>, creators=[self,other],creation_op=<span class="string">'add'</span>)</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data+other.data)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__repr__())</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> str(self.data.__str__())</span><br></pre></td></tr></table></figure>
+<p>测试如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a = Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">b = Tensor([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">c = Tensor([<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">d = a + b</span><br><span class="line">e = b + c</span><br><span class="line">f = d + e</span><br><span class="line">f.backward(Tensor(np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])))</span><br><span class="line">print(b.grad.data == np.array([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>]))</span><br><span class="line">[ <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>]</span><br></pre></td></tr></table></figure></p>
+<h2 id="添加新的张量操作"><a href="#添加新的张量操作" class="headerlink" title="添加新的张量操作"></a>添加新的张量操作</h2><p>同<code>__add__</code>函数的形式统一，可以给张量添加任何操作，以及对应的后向梯度传播方法，例如加入函数<code>negation</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__neg__</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span>(self.autograd):</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data*<span class="number">-1</span>, autograd=<span class="literal">True</span>, creators=[self], create_op=<span class="string">'neg'</span>)</span><br><span class="line">    <span class="keyword">return</span> Tensor(self.data*<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad=None, grad_origin=None)</span>:</span></span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">if</span> (self.creation_op == <span class="string">'neg'</span>):</span><br><span class="line">        self.creators[<span class="number">0</span>].backward(self.grad.__neg__())</span><br></pre></td></tr></table></figure>
+<p>测试如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a = Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">b = Tensor([<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">c = Tensor([<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>], autograd=<span class="literal">True</span>)</span><br><span class="line">d = a + (-b)</span><br><span class="line">e = (-b) + c</span><br><span class="line">f = d + e</span><br><span class="line">f.backward(Tensor(np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])))</span><br><span class="line">print(b.grad.data == np.array([<span class="number">-2</span>,<span class="number">-2</span>,<span class="number">-2</span>,<span class="number">-2</span>,<span class="number">-2</span>]))</span><br><span class="line">[ <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>  <span class="literal">True</span>]</span><br></pre></td></tr></table></figure>
+<p>同理，可以加入许多运算操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__sub__</span><span class="params">(self, other)</span>:</span></span><br><span class="line">        <span class="keyword">if</span>(self.autograd <span class="keyword">and</span> other.autograd):</span><br><span class="line">            <span class="keyword">return</span> Tensor(self.data - other.data,</span><br><span class="line">                          autograd=<span class="literal">True</span>,</span><br><span class="line">                          creators=[self,other],</span><br><span class="line">                          creation_op=<span class="string">"sub"</span>)</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data - other.data)</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__mul__</span><span class="params">(self, other)</span>:</span></span><br><span class="line">    <span class="keyword">if</span>(self.autograd <span class="keyword">and</span> other.autograd):</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data * other.data,</span><br><span class="line">                      autograd=<span class="literal">True</span>,</span><br><span class="line">                      creators=[self,other],</span><br><span class="line">                      creation_op=<span class="string">"mul"</span>)</span><br><span class="line">    <span class="keyword">return</span> Tensor(self.data * other.data)  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span><span class="params">(self, dim)</span>:</span></span><br><span class="line">    <span class="keyword">if</span>(self.autograd):</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data.sum(dim),</span><br><span class="line">                      autograd=<span class="literal">True</span>,</span><br><span class="line">                      creators=[self],</span><br><span class="line">                      creation_op=<span class="string">"sum_"</span>+str(dim))</span><br><span class="line">    <span class="keyword">return</span> Tensor(self.data.sum(dim))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">expand</span><span class="params">(self, dim,copies)</span>:</span></span><br><span class="line">    trans_cmd = list(range(<span class="number">0</span>,len(self.data.shape)))</span><br><span class="line">    trans_cmd.insert(dim,len(self.data.shape))</span><br><span class="line">    new_shape = list(self.data.shape) + [copies]</span><br><span class="line">    new_data = self.data.repeat(copies).reshape(new_shape)</span><br><span class="line">    new_data = new_data.transpose(trans_cmd)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(self.autograd):</span><br><span class="line">        <span class="keyword">return</span> Tensor(new_data,</span><br><span class="line">                      autograd=<span class="literal">True</span>,</span><br><span class="line">                      creators=[self],</span><br><span class="line">                      creation_op=<span class="string">"expand_"</span>+str(dim))</span><br><span class="line">    <span class="keyword">return</span> Tensor(new_data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">transpose</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span>(self.autograd):</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data.transpose(),</span><br><span class="line">                      autograd=<span class="literal">True</span>,</span><br><span class="line">                      creators=[self],</span><br><span class="line">                      creation_op=<span class="string">"transpose"</span>)</span><br><span class="line">    <span class="keyword">return</span> Tensor(self.data.transpose())</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mm</span><span class="params">(self, x)</span>:</span><span class="comment">#矩阵相乘</span></span><br><span class="line">        <span class="keyword">if</span>(self.autograd):</span><br><span class="line">            <span class="keyword">return</span> Tensor(self.data.dot(x.data),</span><br><span class="line">                          autograd=<span class="literal">True</span>,</span><br><span class="line">                          creators=[self,x],</span><br><span class="line">                          creation_op=<span class="string">"mm"</span>)</span><br><span class="line">        <span class="keyword">return</span> Tensor(self.data.dot(x.data))</span><br></pre></td></tr></table></figure>
+<p>对应的要在<code>.backward()</code>中添加代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (self.creation_op == <span class="string">'sub'</span>):</span><br><span class="line">    new = Tensor(self.grad.data)</span><br><span class="line">    self.creators[<span class="number">0</span>].backward(new, self)</span><br><span class="line">    new = Tensor(self.grad.__neg__().data)</span><br><span class="line">    self.creators[<span class="number">1</span>].backward(new, self)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> (self.creation_op == <span class="string">'mul'</span>):</span><br><span class="line">    new = self.grad  * self.creators[<span class="number">1</span>]</span><br><span class="line">    self.creators[<span class="number">0</span>].backward(new, self)</span><br><span class="line">    new = self.grad * self.creators[<span class="number">0</span>]</span><br><span class="line">    self.creators[<span class="number">1</span>].backward(new, self)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> (self.creation_op == <span class="string">'mm'</span>):</span><br><span class="line">    act == self.creators[<span class="number">0</span>]</span><br><span class="line">    weights = self.creators[<span class="number">1</span>]</span><br><span class="line">    new = self.grad.mm(weights.transpose())</span><br><span class="line">    act.backward(new)</span><br><span class="line">    new = self.grad.transpose().mm(act).transpose()</span><br><span class="line">    weights.backward(new)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> (self.creation_op == <span class="string">'transpose'</span>):</span><br><span class="line">    self.creators[<span class="number">0</span>].backward(self.grad.transpose())</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="string">'sum'</span> <span class="keyword">in</span> self.creation_op):</span><br><span class="line">    dim = int(self.creation_op.split(<span class="string">"_"</span>)[<span class="number">1</span>])</span><br><span class="line">	ds = self.creators[<span class="number">0</span>].data.shape[dim]</span><br><span class="line">	self.creators[<span class="number">0</span>].backward(self.grad.expand(dim,ds))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="string">"expand"</span> <span class="keyword">in</span> self.creation_op):</span><br><span class="line">    dim = int(self.creation_op.split(<span class="string">"_"</span>)[<span class="number">1</span>])</span><br><span class="line">    self.creators[<span class="number">0</span>].backward(self.grad.sum(dim))</span><br></pre></td></tr></table></figure>
+<h2 id="训练一个简单的神经网络"><a href="#训练一个简单的神经网络" class="headerlink" title="训练一个简单的神经网络"></a>训练一个简单的神经网络</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">data = Tensor(np.array([[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">1</span>],[<span class="number">1</span>,<span class="number">0</span>],[<span class="number">1</span>,<span class="number">1</span>]]), autograd=<span class="literal">True</span>)</span><br><span class="line">target = Tensor(np.array([[<span class="number">0</span>],[<span class="number">1</span>],[<span class="number">0</span>],[<span class="number">1</span>]]), autograd=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">w = list()</span><br><span class="line">w.append(Tensor(np.random.rand(<span class="number">2</span>,<span class="number">3</span>), autograd=<span class="literal">True</span>))</span><br><span class="line">w.append(Tensor(np.random.rand(<span class="number">3</span>,<span class="number">1</span>), autograd=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    pred = data.mm(w[<span class="number">0</span>]).mm(w[<span class="number">1</span>])</span><br><span class="line">    loss = ((pred - target)*(pred - traget)).sum(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    loss.backward(Tensor(np.ones_like(loss.data)))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> w_ <span class="keyword">in</span> w:</span><br><span class="line">        w_.data -= w_.grad.data *<span class="number">0.1</span></span><br><span class="line">        w_grad.data *= <span class="number">0</span></span><br><span class="line">    print(loss)</span><br></pre></td></tr></table></figure>
+<h2 id="添加自动优化方法"><a href="#添加自动优化方法" class="headerlink" title="添加自动优化方法"></a>添加自动优化方法</h2><p>添加随机梯度下降优化：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SGD</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, parameters, alpha=<span class="number">0.1</span>)</span>:</span></span><br><span class="line">        self.parameters = parameters</span><br><span class="line">        self.alpha = alpha</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">zero</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> self.parameters:</span><br><span class="line">            p.grad.data *= <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, zero=True)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> self.parameters:</span><br><span class="line">            p.data -= p.grad.data * self.alpha</span><br><span class="line">            <span class="keyword">if</span> (zero):</span><br><span class="line">                p.grad.data *= <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>之前的神经网络可以简化为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line"><span class="comment">#数据准备</span></span><br><span class="line">data = Tensor(np.array([[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">1</span>],[<span class="number">1</span>,<span class="number">0</span>],[<span class="number">1</span>,<span class="number">1</span>]]), autograd=<span class="literal">True</span>)</span><br><span class="line">target = Tensor(np.array([[<span class="number">0</span>],[<span class="number">1</span>],[<span class="number">0</span>],[<span class="number">1</span>]]), autograd=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#模型准备：矩阵，优化方法</span></span><br><span class="line">w = list()</span><br><span class="line">w.append(Tensor(np.random.rand(<span class="number">2</span>,<span class="number">3</span>), autograd=<span class="literal">True</span>))</span><br><span class="line">w.append(Tensor(np.random.rand(<span class="number">3</span>,<span class="number">1</span>), autograd=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line">optim = SGD(parameters=w, alpha=<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    pred = data.mm(w[<span class="number">0</span>]).mm(w[<span class="number">1</span>])</span><br><span class="line">    </span><br><span class="line">    loss = ((pred - target)*(pred-target)).sum(<span class="number">0</span>)</span><br><span class="line">    loss.backward(Tensor(np.ones_like(loss.data)))</span><br><span class="line">    </span><br><span class="line">    optim.step()</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    对于以上的工作中，核心观点是如何构建张量，实现自动的计算图构建和自动梯度计算。在下一篇文章中，将引入Layer抽象类，构建前向传播API，同时简绍如何利用自建的深度框架，一步步实现RNN和LSTM网络。</p>
 
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢支持<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/myself/aipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/myself/weichat.png">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+	  
+		<span id="busuanzi_container_page_pv">
+		  ⋉(●本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次●)⋊
+		</span>
+	  
+	
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://zh7.wang/2020/02/07/%E4%BB%8E%E5%A4%B4%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/01/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">深度学习基本概念</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#张量"><span class="toc-number">1.</span> <span class="toc-text">张量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动梯度计算（autograd）"><span class="toc-number">2.</span> <span class="toc-text">自动梯度计算（autograd）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对自动梯度计算进行改进，以支持对张量的多次调用"><span class="toc-number">3.</span> <span class="toc-text">对自动梯度计算进行改进，以支持对张量的多次调用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基础的自动梯度计算存在的问题"><span class="toc-number">3.0.1.</span> <span class="toc-text">基础的自动梯度计算存在的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自动梯度计算改进"><span class="toc-number">3.0.2.</span> <span class="toc-text">自动梯度计算改进</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加新的张量操作"><span class="toc-number">4.</span> <span class="toc-text">添加新的张量操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#训练一个简单的神经网络"><span class="toc-number">5.</span> <span class="toc-text">训练一个简单的神经网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加自动优化方法"><span class="toc-number">6.</span> <span class="toc-text">添加自动优化方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+
 
     
+        <section id="comments" class="comments">
+          <style>
+            .comments{margin:30px;padding:10px;background:#fff}
+            @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+          </style>
+          <div id="vcomment" class="comment"></div> 
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    var notify = 'false' == true ? true : false;
+    var verify = 'false' == true ? true : false;
+    new Valine({
+        av: AV,
+        el: '#vcomment',
+        notify: notify,
+        app_id: "m2zsRB66KA4xbH7b5IR5vEUN-gzGzoHsz",
+        app_key: "BqH0PIWEoz2Ntu0oFgUB6IBg",
+        placeholder: "Just go go",
+        avatar:"mm",
+    });
+</script>
+      </section>
+    
 
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
 
           </div>
         </div>
@@ -244,9 +459,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: false,
