@@ -177,149 +177,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="循环神经网络进阶"><a href="#循环神经网络进阶" class="headerlink" title="循环神经网络进阶"></a>循环神经网络进阶</h2><p>该部分对于复杂的原理暂不讨论，只利用Pytorch进行模型搭建</p>
-<h4 id="GRU"><a href="#GRU" class="headerlink" title="GRU"></a>GRU</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GRN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, hidden_size, num_classes)</span>:</span></span><br><span class="line">        super(GRN, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line">        self.rnn = nn.GRU(self.input_size, self.hidden_size)</span><br><span class="line">        self.fc = nn.Linear(hidden_size, num_classes)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="comment"># 初始化隐藏层向量 hidden</span></span><br><span class="line">        h0 = torch.zeros(<span class="number">1</span>, x.zize(<span class="number">0</span>), self.hidden_size).to(device)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># GRU前向传播</span></span><br><span class="line">        out, _ = self.rnn(x, h0)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 解码最后一层隐藏层状态</span></span><br><span class="line">        out = self.fc(out[:,<span class="number">-1</span>,:])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line">model = GRN(input_size, output_size, num_classes).to(device)</span><br></pre></td></tr></table></figure>
-<h4 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTM</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(input_size, hidden_size, num_classes)</span>:</span></span><br><span class="line">        super(LSTM, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.num_classes = num_classes</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        self.lstm = nn.LSTM(input_size=input_size, hidden_size = hidden_size)</span><br><span class="line">        self.fc = nn.Linear(hidden_size, num_classes)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        h0 = torch.zeros(<span class="number">1</span>, x.size(<span class="number">0</span>), self.hidden_size).to(device)</span><br><span class="line">        c0 = torch.zeros(<span class="number">1</span>, x.size(<span class="number">0</span>), self.hidden_size).to(device)</span><br><span class="line">        </span><br><span class="line">        out, _ = self.lstm(x, (h0, c0))</span><br><span class="line">        </span><br><span class="line">        out = self.fc(out[:,<span class="number">-1</span>,:])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<h4 id="深度循环神经网络"><a href="#深度循环神经网络" class="headerlink" title="深度循环神经网络"></a>深度循环神经网络</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTM</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, hidden_size, num_layers, num_classes)</span>:</span></span><br><span class="line">        super(LSTM, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line">        self.num_classes = num_classes</span><br><span class="line">        </span><br><span class="line">        self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers, batch_first=<span class="literal">True</span>)</span><br><span class="line">        self.fc = nn.Linear(hidden_size, num_classes)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        h0 = torch.zeros(self.num_layers, x.size(<span class="number">0</span>), self.hidden_size)</span><br><span class="line">        c0 = torch.zeros(self.num_layers, x.size(<span class="number">0</span>), self.hidden_size)</span><br><span class="line">        </span><br><span class="line">        out, _ = self.lstm(x, (h0,c0))</span><br><span class="line">        </span><br><span class="line">        out = self.fc(out[:,<span class="number">-1</span>,:])</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<h4 id="双向循环神经网络"><a href="#双向循环神经网络" class="headerlink" title="双向循环神经网络"></a>双向循环神经网络</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BiRNN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, hidden_size, num_layers, num_classes)</span>:</span></span><br><span class="line">        super(BiRNN, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line">        </span><br><span class="line">        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=<span class="literal">True</span>, bidrectional=<span class="literal">True</span>)</span><br><span class="line">        self.fc = nn.Linear(hidden_size*<span class="number">2</span>, num_classes)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        h0 = torch.zeros(num_layers*<span class="number">2</span>, x.size(<span class="number">0</span>), hidden_size).to(device)</span><br><span class="line">        c0 = torch.zeros(num_layers*<span class="number">2</span>, x.size(<span class="number">0</span>), hidden_size).to(device)</span><br><span class="line">        </span><br><span class="line">        out, _ = self.lstm(x, (h0,c0))</span><br><span class="line">        </span><br><span class="line">        out = self.fc(out[:,<span class="number">-1</span>,:])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">model = BiRNN(input_size, hidden_size, num_layers, num_classes).to(device)</span><br></pre></td></tr></table></figure>
-<h2 id="过拟合欠拟合及其解决方案"><a href="#过拟合欠拟合及其解决方案" class="headerlink" title="过拟合欠拟合及其解决方案"></a>过拟合欠拟合及其解决方案</h2><blockquote>
-<ol>
-<li>过拟合、欠拟合的概念</li>
-<li>权重衰减</li>
-<li>丢弃法</li>
-</ol>
+        <blockquote>
+<p>该文主要对循环神经网络、过拟合和欠拟合、梯度爆炸卷积神经网络等进行学习记录。</p>
 </blockquote>
-<h3 id="训练误差和泛化误差"><a href="#训练误差和泛化误差" class="headerlink" title="训练误差和泛化误差"></a>训练误差和泛化误差</h3><ul>
-<li>训练误差：模型在训练数据集上表现出的误差</li>
-<li>泛化误差：模型在任意一个测试数据样本上表现的误差的期望，并常常通过测试数据上的误差进行近似。</li>
-<li>计算方法：采用损失函数，例如：<ul>
-<li>均方差 MSELoss</li>
-<li>交叉熵 CrossEtropyLoss</li>
-</ul>
-</li>
-<li>意义：机器学习模型要关注降低泛化误差</li>
-</ul>
-<h3 id="模型选择"><a href="#模型选择" class="headerlink" title="模型选择"></a>模型选择</h3><h5 id="验证数据集"><a href="#验证数据集" class="headerlink" title="验证数据集"></a>验证数据集</h5><p>我的理解：用来在模型训练过程中，实时关注近似模型泛化误差的数据集。但是该数据集并不参与模型训练了过程，只用于模型选择。真正的泛化误差近似，依然使用测试集进行。</p>
-<h5 id="K折交叉验证"><a href="#K折交叉验证" class="headerlink" title="K折交叉验证"></a>K折交叉验证</h5><p>在训练数据有限的情况下，预留大量的验证数据是不合理的。一种有效的方法是使用K折交叉验证（K-fold cross-validation），内容如下：</p>
-<ol>
-<li>在K折交叉验证中，我们把原始数据分割成K个不重叠子数据集，做K次训练和验证。</li>
-<li>每一次使用一个子数据集验证，模型，其他k-1个子集训练模型。</li>
-<li>最后，我们对这K次训练误差和验证误差分别求平均。</li>
-</ol>
-<h3 id="过拟合和欠拟合"><a href="#过拟合和欠拟合" class="headerlink" title="过拟合和欠拟合"></a>过拟合和欠拟合</h3><p><strong>过拟合</strong>：模型训练误差远小于泛化误差。该问题的本质原因是：相对于数据集而言，模型复杂度太高，模型将会捕捉数据集中所有不相关的噪声，并拟合为模型的特征。</p>
-<ul>
-<li><p><em>模型复杂度</em>：通常可以通过模型的非线性相关参数规模来直观理解，模型的参数规模越大，模型越复杂，该模型需要的数据集规模也就越大。否则模型会捕捉噪声，形成过拟合，泛化误差变大。因此依据数据集大小选择合适的模型规模是十分重要的。</p>
-</li>
-<li><p><em>训练数据集大小</em>：影响欠拟合和过拟合的另一个重要因素是训练数据集的大小。一般来说，如果训练数据集中样本数过少，特别是比模型参数数量（按元素计）更少时，过拟合更容易发生。此外，泛化误差不会随训练数据集里样本数量增加而增大。因此，在计算资源允许的范围之内，我们通常希望训练数据集大一些，特别是在模型复杂度较高时，例如层数较多的深度学习模型。</p>
-</li>
-</ul>
-<p><strong>欠拟合</strong>： 模型训练误差太高，无法收敛</p>
-<h3 id="权重衰减"><a href="#权重衰减" class="headerlink" title="权重衰减"></a>权重衰减</h3><p>其实就是L2参数正则化，对该方法比较熟悉，做一些直观的解释：</p>
-<ol>
-<li><p>对于初始化权重，一般权重是一个较小的随机值，在训练初期，较小权重的衰减很小可忽略，梯度下降的步长较大，可以快速向最优值附近收敛。(大步长由有效信息主导)</p>
-</li>
-<li><p>权重越大，其衰减程度越大，大权重的梯度下降步长较小。因此L2正则项带来的权重衰减，对于较大的权重，可以一定程度上抵消噪声带来的梯度，以缓解过拟合。（小步长噪声占比大）</p>
-</li>
-</ol>
-<p>其实L2正则化，通过限制权重增长，降低了模型复杂度。</p>
-<p>以下通过简单的线性回归，解释该方法在PyTorch的使用：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Initialize model</span></span><br><span class="line">model = nn.Linear(<span class="number">3</span>,<span class="number">1</span>)</span><br><span class="line">nn.init.normal_(model.weight, mean=<span class="number">0</span>, std=<span class="number">1</span>)</span><br><span class="line">nn.init.normal_(model.bias, mean=<span class="number">0</span>, std=<span class="number">1</span>)</span><br><span class="line">optimizer_w = nn.optim.SGD(params=[model.weight], lr = <span class="number">0.01</span>, weight_decay=<span class="number">2</span>)<span class="comment">#weight_decay是衰减参数 lambda</span></span><br><span class="line">optimizer_b = nn.optim.SGD(params=[model.b],lr=<span class="number">0.01</span>)</span><br><span class="line"></span><br><span class="line">criterion = nn.MSELoss()</span><br><span class="line">train_ls, test_ls = [], []</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">        pred = model(X)</span><br><span class="line">        loss = criterion(pred, y)</span><br><span class="line">        optimizer_w.zero_grad()</span><br><span class="line">        optimizer_b.zero_grad()</span><br><span class="line">        </span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer_w.step()</span><br><span class="line">        optimizer_b.step()</span><br><span class="line">    train_ls.append(loss(net(train_features), train_labels).mean().item())</span><br><span class="line">    test_ls.append(loss(net(test_features), test_labels).mean().item())</span><br><span class="line">d2l.semilogy(range(<span class="number">1</span>, num_epochs + <span class="number">1</span>), train_ls, <span class="string">'epochs'</span>, <span class="string">'loss'</span>,</span><br><span class="line">                 range(<span class="number">1</span>, num_epochs + <span class="number">1</span>), test_ls, [<span class="string">'train'</span>, <span class="string">'test'</span>])</span><br><span class="line">print(<span class="string">'L2 norm of w:'</span>, net.weight.data.norm().item())</span><br></pre></td></tr></table></figure>
-<h3 id="丢弃法"><a href="#丢弃法" class="headerlink" title="丢弃法"></a>丢弃法</h3><p> 基本原理不做赘述，直观理解：</p>
-<ul>
-<li>该方法在每次前向和后向传播过程中，随机的关闭一些神经元，以减少每次训练时模型复杂度（参与训练的参数规模度变小）</li>
-<li>而每次对一部分参数进行训练，相当于训练了多张神经网络，其综合的效果又可以抵消噪声带来的模型对无效信息的记忆，以缓解过拟合。</li>
-</ul>
-<p>pytorch实现如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">model = nn.Sequantial(</span><br><span class="line">        nn.Linear(input_size, hidden1_size),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Dropout(drop_prob1),</span><br><span class="line">        nn.Linear(hidden1_size, hidden2_size),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Dropout(drop_prob2),</span><br><span class="line">        nn.Linear(hidden2_prob2, <span class="number">10</span>)</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
-<h2 id="梯度消失、梯度爆炸以及Kaggle房价预测"><a href="#梯度消失、梯度爆炸以及Kaggle房价预测" class="headerlink" title="梯度消失、梯度爆炸以及Kaggle房价预测"></a>梯度消失、梯度爆炸以及Kaggle房价预测</h2><h4 id="梯度消失和梯度爆炸"><a href="#梯度消失和梯度爆炸" class="headerlink" title="梯度消失和梯度爆炸"></a>梯度消失和梯度爆炸</h4><p>关于梯度消失和梯度爆炸的理解：</p>
-<blockquote>
-<p>​        在反向传播过程中，梯度常常与输入值有正相关，如果输入值较大，在深层次的网络中，经过反向传播，梯度不断放大，发生梯度爆炸，导致模型无法收敛；同理，梯度消失也会在深层网络中产生，导致收敛速度极慢。</p>
-</blockquote>
-<h4 id="随机初始化模型参数"><a href="#随机初始化模型参数" class="headerlink" title="随机初始化模型参数"></a>随机初始化模型参数</h4><p><strong>直观解释</strong>：</p>
-<p>​        在一个全连接神经网络中，隐藏层每个神经单元的是由其权重值和激活函数定义的，如果包含相同的激活函数和权重值，这些神经元具有相同的作用：在前向传播过程中相同的神经元对结果做出相同的贡献（线性叠加）， 在后向传播过程中，他们也会得到相同的梯度。也就是说，他们完全提取相同的数据集特征，这样子模型的复杂度降低，容易产生欠拟合。</p>
-<h5 id="PyTorch的默认随机初始化"><a href="#PyTorch的默认随机初始化" class="headerlink" title="PyTorch的默认随机初始化"></a>PyTorch的默认随机初始化</h5><p>随机初始化模型参数的方法有很多。在线性回归的简洁实现中，我们使用<code>torch.nn.init.normal_()</code>使模型<code>net</code>的权重参数采用正态分布的随机初始化方式。不过，PyTorch中<code>nn.Module</code>的模块参数都采取了较为合理的初始化策略（不同类型的layer具体采样的哪一种初始化方法的可参考<a href="https://github.com/pytorch/pytorch/tree/master/torch/nn/modules" target="_blank" rel="noopener">源代码</a>），因此一般不用我们考虑。</p>
-<h5 id="Xavier随机初始化"><a href="#Xavier随机初始化" class="headerlink" title="Xavier随机初始化"></a>Xavier随机初始化</h5><p>假设某全连接层的输入个数为a，输出个数为b，Xavier随机初始化将使该层中权重参数的每个元素都随机采样于均匀分布：</p>
-<script type="math/tex; mode=display">
-U\left( -\sqrt{\frac{6}{a+b}}, \sqrt{\frac{6}{a+b}} \right)</script><p>它的设计主要考虑到，模型参数初始化后，每层输出的方差不该受该层输入个数影响，且每层梯度的方差也不该受该层输出个数影响。</p>
-<h4 id="考虑环境因素"><a href="#考虑环境因素" class="headerlink" title="考虑环境因素"></a>考虑环境因素</h4><h5 id="协变量偏移："><a href="#协变量偏移：" class="headerlink" title="协变量偏移："></a>协变量偏移：</h5><p>类似于由于时间的推移，输入分布变化，但模型没变</p>
-<h5 id="标签偏移"><a href="#标签偏移" class="headerlink" title="标签偏移"></a>标签偏移</h5><p>输入标签规模小，无法预测其他标签结果</p>
-<h5 id="概念偏移"><a href="#概念偏移" class="headerlink" title="概念偏移"></a>概念偏移</h5><p>模型随时空变化。</p>
-<h2 id="机器翻译"><a href="#机器翻译" class="headerlink" title="机器翻译"></a>机器翻译</h2><p>该部分暂不做详述，应暂不进行该领域研究，只做了大致了解。</p>
-<h2 id="卷积神经网络基础"><a href="#卷积神经网络基础" class="headerlink" title="卷积神经网络基础"></a>卷积神经网络基础</h2><blockquote>
-<p>卷积层、池化层（填充、步幅、输入通道和输出通道）</p>
-</blockquote>
-<h4 id="二维卷积层"><a href="#二维卷积层" class="headerlink" title="二维卷积层"></a>二维卷积层</h4><blockquote>
-<p>卷积层的核心在于，通过将较少的参数重复用于不同的数据段，降低模型复杂度，但是并不降低模型（对分布）的表达力，甚至有所提升。从而极大的缓解了深度神经网络过拟合的问题。</p>
-</blockquote>
-<ul>
-<li>1×1卷积核可在不改变高宽的情况下，调整通道数。1×1卷积核不识别高和宽维度上相邻元素构成的模式，其主要计算发生在通道维上。假设我们将通道维当作特征维，将高和宽维度上的元素当成数据样本，那么1×1卷积层的作用与全连接层等价。</li>
-</ul>
-<p>我们使用Pytorch中的<code>nn.Conv2d</code>类来实现二维卷积层，主要关注以下几个构造函数参数：</p>
-<ul>
-<li><code>in_channels</code> (python:int) – Number of channels in the input imag</li>
-<li><code>out_channels</code> (python:int) – Number of channels produced by the convolution</li>
-<li><code>kernel_size</code> (python:int or tuple) – Size of the convolving kernel</li>
-<li><code>stride</code> (python:int or tuple, optional) – Stride of the convolution. Default: 1</li>
-<li><code>padding</code> (python:int or tuple, optional) – Zero-padding added to both sides of the input. Default: 0</li>
-<li><code>bias</code> (bool, optional) – If True, adds a learnable bias to the output. Default: True</li>
-</ul>
-<p><code>forward</code>函数的参数为一个四维张量，形状为(N,Cin,Hin,Win)，返回值也是一个四维张量，形状为(N,Cout,Hout,Wout)，其中<strong><em>N是批量大小，C,H,W分别表示通道数、高度、宽度</em></strong>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.rand(<span class="number">4</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>)<span class="comment"># 4*2*3*5</span></span><br><span class="line"></span><br><span class="line">conv2d = nn.Conv2d(in_channels=<span class="number">2</span>, out_channels=<span class="number">3</span>, kernel_size=(<span class="number">3</span>,<span class="number">5</span>), stride=<span class="number">1</span>, padding=(<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">Y = conv2d(x)     <span class="comment"># 4*3*3*5</span></span><br></pre></td></tr></table></figure>
-<h4 id="二维池化层"><a href="#二维池化层" class="headerlink" title="二维池化层"></a>二维池化层</h4><p>池化层主要用于缓解卷积层对位置的过度名感性。包括最大池化、平均池化，基本原理不做赘述。做一些直观的解释：</p>
-<ul>
-<li>池化层实际是对卷积层获得的数据特征进行采样，以降低数据维度，缓解过拟合。</li>
-<li>低维的卷积层，用于抽取低维度的一些特征，比方图片中线条之类的特征，但是也会抽取一些无关的噪声，利用池化层可以缓解这种噪声的影响，以便更好的形成对数据特征的高维抽象(高纬卷积层进行特征抽象)。</li>
-</ul>
-<p>Pytorch实现：</p>
-<p>我们使用Pytorch中的<code>nn.MaxPool2d</code>实现最大池化层，关注以下构造函数参数：</p>
-<ul>
-<li><code>kernel_size</code> – the size of the window to take a max over</li>
-<li><code>stride</code> – the stride of the window. Default value is kernel_size</li>
-<li><code>padding</code> – implicit zero padding to be added on both sides</li>
-</ul>
-<p><code>forward</code>函数的参数为一个四维张量，形状为(N,C,Hin,Win)，返回值也是一个四维张量，形状为(N,C,Hout,Wout)，其中N是批量大小，C,H,W分别表示通道数、高度、宽度：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">32</span>, dtype=torch.float32).view(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">pool2d = nn.MaxPool2d(kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>, stride(<span class="number">2</span>,<span class="number">1</span>))</span><br><span class="line">Y = pool2d(x)</span><br></pre></td></tr></table></figure>
-<h4 id="一个十分重要的总结："><a href="#一个十分重要的总结：" class="headerlink" title="一个十分重要的总结："></a>一个十分重要的总结：</h4><p>​        当一个神经网络需要在多个地方使用相同的思想时，则劲量在这些地方使用相同的权重。从而，这些权重在获得更多的数据样本后，会变得更加智能， 形成对数据特征的高维抽象，降低泛化误差。包括卷积神经网络，循环神经网络，词嵌入，胶囊网络这些成功设计，都可以从这个观点来解释。在从事研究工作时，这个观点应当予以重视，相信会有更大的突破产生。</p>
-<h2 id="LeNet"><a href="#LeNet" class="headerlink" title="LeNet"></a>LeNet</h2><p>分为卷积层快和全连接层块俩个部分。以下对这俩个模块进行介绍：</p>
-<ul>
-<li><p>卷积层块里的基本单位是卷积层后接平均池化层：卷积层用来识别图像里的空间模式，如线条和物体局部，之后的平均池化层则用来降低卷积层对位置的敏感性。</p>
-</li>
-<li><p>卷积层块由两个这样的基本单位重复堆叠构成。在卷积层块中，每个卷积层都使用5×5的窗口，并在输出上使用sigmoid激活函数。第一个卷积层输出通道数为6，第二个卷积层输出通道数则增加到16。</p>
-</li>
-<li><p>全连接层块含3个全连接层。它们的输出个数分别是120、84和10，其中10为输出的类别个数。</p>
-</li>
-</ul>
-<blockquote>
-<p>直观解释</p>
-<ul>
-<li><p>卷积层低层识别基本特征，高层对高维特征进行抽象</p>
-</li>
-<li><p>全连接层对高维特征进行聚类，以用于最后任务。</p>
-</li>
-</ul>
-</blockquote>
-<p><img src="/2020/02/13/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/LeNet.png" alt="LeNet" style="zoom:50%;"></p>
-<p>PyTorch实现：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LeNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_classes)</span>:</span></span><br><span class="line">        super(LeNet, self).__init__()</span><br><span class="line">        self.layer_1 = nn.Sequential(</span><br><span class="line">        			nn.Conv2d(<span class="number">1</span>, <span class="number">6</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>),<span class="comment">#b*1*28*28 =&gt; b*6*28*28</span></span><br><span class="line">        			nn.BatchNorm2d(<span class="number">6</span>),         </span><br><span class="line">        			nn.Sigmoid(), </span><br><span class="line">        			nn.AvgPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>))  <span class="comment">#b*6*28*28 =&gt; b*6*14*14  </span></span><br><span class="line">        </span><br><span class="line">        self.layer_2 = nn.Sequential(</span><br><span class="line">            		nn.Conv2d(<span class="number">6</span>,<span class="number">16</span>, kernel_size=<span class="number">5</span>),  <span class="comment">#b*6*14*14 =&gt; b*16*10*10</span></span><br><span class="line">        			nn.BatchNorm(<span class="number">16</span>),</span><br><span class="line">        			nn.Sigmoid(),</span><br><span class="line">        			nn.AvgPool2d(kernel_size=<span class="number">2</span>, padding=<span class="number">2</span>)) <span class="comment"># b*16*5*5</span></span><br><span class="line">        </span><br><span class="line">        self.fc = nn.Sequential(</span><br><span class="line">        			nn.Linear(<span class="number">16</span>*<span class="number">5</span>*<span class="number">5</span>, <span class="number">120</span>),</span><br><span class="line">            		nn.Sigmoid()</span><br><span class="line">        			nn.Linear(<span class="number">120</span>, <span class="number">84</span>),</span><br><span class="line">        			nn.Sigmoid(),</span><br><span class="line">        			nn.Linear(<span class="number">84</span>, num_classes))</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        out = self.layer_1(x)</span><br><span class="line">        out = self.layer_2(out)</span><br><span class="line">        out.reshape(out.size(<span class="number">0</span>),<span class="number">-1</span>)</span><br><span class="line">        out = self.fc(out)</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<h2 id="Modern-CNN"><a href="#Modern-CNN" class="headerlink" title="Modern CNN"></a>Modern CNN</h2><h4 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h4><p><img src="/2020/02/13/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/AlexNet.png" alt="AlexNet"></p>
-<p>可以看到加入了彩色图像</p>
-<p>PyTorch实现：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AlexNetCNN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_classes)</span>:</span></span><br><span class="line">        super(AlexNetCNN, self).__init__()</span><br><span class="line">        self.layer_1 = nn.Sequential(</span><br><span class="line">        			nn.Conv2d(<span class="number">3</span>, <span class="number">96</span>, kernel_size=<span class="number">11</span>, stride=(<span class="number">4</span>,<span class="number">4</span>)), <span class="comment"># d*3*224*224 =&gt; d*96*54*54</span></span><br><span class="line">            		nn.BatchNorm(<span class="number">96</span>),</span><br><span class="line">            		nn.ReLU(),</span><br><span class="line">            		nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=(<span class="number">2</span>,<span class="number">2</span>)) <span class="comment"># d*96*54*54 =&gt; d*96*26*26   </span></span><br><span class="line">        			)</span><br><span class="line">        self.layer_2 = nn.Sequential(</span><br><span class="line">        			nn.Conv(<span class="number">96</span>, <span class="number">256</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>),<span class="comment"># d*96*26*26 =&gt; d*256*26*26		   </span></span><br><span class="line">            		nn.BatchNorm(<span class="number">256</span>),</span><br><span class="line">            		nn.ReLU(),</span><br><span class="line">            		nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=(<span class="number">2</span>,<span class="number">2</span>)), <span class="comment">#d*256*26*26 =&gt; d*256*12*12</span></span><br><span class="line">        			)</span><br><span class="line">        self.layer_3 = nn.Sequential(</span><br><span class="line">        			nn.Conv2d(<span class="number">256</span>, <span class="number">384</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>),<span class="comment"># d*256*12*12 =&gt; d*384*12*12</span></span><br><span class="line">            		nn.BacthNorm(<span class="number">384</span>),</span><br><span class="line">            		nn.ReLU()</span><br><span class="line">        			nn.Conv2d(<span class="number">384</span>, <span class="number">384</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>),<span class="comment"># d*384*12*12 =&gt;  d*384*12*12</span></span><br><span class="line">            		nn.BatchNorm(<span class="number">384</span>),</span><br><span class="line">            		nn.ReLU()</span><br><span class="line">        			nn.Conv2d(<span class="number">384</span>, <span class="number">256</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>),<span class="comment"># d*384*12*12 =&gt; d*256*12*12</span></span><br><span class="line">            		nn.BatchNorm(<span class="number">256</span>),</span><br><span class="line">            		nn.ReLU()</span><br><span class="line">            		nn.MaxPool2d(<span class="number">3</span>,<span class="number">2</span>)<span class="comment"># d*256*12*12 =&gt; d*256*5*5</span></span><br><span class="line">        			)</span><br><span class="line">        </span><br><span class="line">        self.fc = nn.Sequential(</span><br><span class="line">        			nn.Linear(<span class="number">256</span>*<span class="number">5</span>*<span class="number">5</span>, <span class="number">4096</span>),</span><br><span class="line">        			nn.ReLU(),</span><br><span class="line">        			nn.Linear(<span class="number">4096</span>, <span class="number">4096</span>),</span><br><span class="line">        			nn.ReLU(),</span><br><span class="line">        			nn.Dropout(<span class="number">0.5</span>),</span><br><span class="line">        			nn.Linear(<span class="number">4096</span>, num_classes))</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, img)</span>:</span></span><br><span class="line">            feature = self.layer_1(img)</span><br><span class="line">            feature = self.layer_2(feature)</span><br><span class="line">            feature = self.layer_3(feature)</span><br><span class="line">            </span><br><span class="line">            out = self.fc(feature.view(feature.size(<span class="number">0</span>),<span class="number">1</span>))</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<h4 id="VGG"><a href="#VGG" class="headerlink" title="VGG"></a>VGG</h4><p>VGG：通过重复使用简单的基础块来构建深度模型</p>
-<p>Block：数个相同的填充为1、窗口形状为$3\times 3$的卷积层，接上一个步幅为2、窗口形状为$2\times 2$的的最大池化层</p>
-<ul>
-<li>卷积层保持输入宽高不变，池化层对其减半。</li>
-</ul>
-<p>这些结构不做讨论，基本不会涉及的理论结构。包括NiN，GoogLeNet如下：</p>
-<ul>
-<li>NiN重复使⽤由卷积层和代替全连接层的1×1卷积层构成的NiN块来构建深层⽹络。NiN去除了容易造成过拟合的全连接输出层，而是将其替换成输出通道数等于标签类别数 的NiN块和全局平均池化层。NiN的以上设计思想影响了后⾯⼀系列卷积神经⽹络的设计。</li>
-</ul>
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>这部分非常重要的一个概念是在不同的数据段<strong>重用参数</strong>：</p>
-<ul>
-<li>一方面，参数重用可以使模型复杂度下降，但是模型表达能力依然很强</li>
-<li>另一方面，让参数在不同的数据段参与训练，参数会更加智能，捕获高维抽象的特征。（CNN和RNN都是这样的道理）</li>
-</ul>
-
+        
       
 
       
@@ -548,11 +409,11 @@ U\left( -\sqrt{\frac{6}{a+b}}, \sqrt{\frac{6}{a+b}} \right)</script><p>它的设
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">numpy</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深度学习框架</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深度学习框架</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">numpy</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -637,11 +498,11 @@ U\left( -\sqrt{\frac{6}{a+b}}, \sqrt{\frac{6}{a+b}} \right)</script><p>它的设
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">numpy</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深度学习框架</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深度学习框架</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">numpy</a>
         		</li>
       		
 		</ul>
@@ -806,11 +667,11 @@ U\left( -\sqrt{\frac{6}{a+b}}, \sqrt{\frac{6}{a+b}} \right)</script><p>它的设
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">强化学习</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">量子计算</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">量子计算</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">强化学习</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -891,11 +752,11 @@ U\left( -\sqrt{\frac{6}{a+b}}, \sqrt{\frac{6}{a+b}} \right)</script><p>它的设
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">强化学习</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">量子计算</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">量子计算</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">强化学习</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -1136,11 +997,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">numpy</a>
+                <a href="javascript:void(0)" class="js-tag color2">深度学习框架</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深度学习框架</a>
+                <a href="javascript:void(0)" class="js-tag color1">numpy</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1236,11 +1097,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">强化学习</a>
+                <a href="javascript:void(0)" class="js-tag color5">量子计算</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">量子计算</a>
+                <a href="javascript:void(0)" class="js-tag color5">强化学习</a>
               </li>
              
               <li class="article-tag-list-item">
