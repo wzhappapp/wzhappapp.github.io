@@ -6,16 +6,33 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://zh7.wang">
-  <title>Tag: 梯度消失与梯度爆炸 | MaoChun&#39;s blogs</title>
+  <title>动手学习深度学习 Task6&amp;Task7&amp;Task8 | MaoChun&#39;s blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="仰望太久，总忽视许多触目惊心的东西；低头瞟到的每一处场景，都会给梦想一个新的定义。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="MaoChun&#39;s blogs">
-<meta property="og:url" content="https://zh7.wang/tags/%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8/index.html">
+  <meta name="description" content="该文将对优化算法、批量归一化、残差网络、梯度下降方法、词嵌入、文本分类、数据增强和模型微调进行介绍，主要记录自己的理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动手学习深度学习 Task6&amp;Task7&amp;Task8">
+<meta property="og:url" content="https://zh7.wang/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/index.html">
 <meta property="og:site_name" content="MaoChun&#39;s blogs">
-<meta property="og:description" content="仰望太久，总忽视许多触目惊心的东西；低头瞟到的每一处场景，都会给梦想一个新的定义。">
+<meta property="og:description" content="该文将对优化算法、批量归一化、残差网络、梯度下降方法、词嵌入、文本分类、数据增强和模型微调进行介绍，主要记录自己的理解。">
+<meta property="og:image" content="https://zh7.wang/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/resNet.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=l%252B1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=l">
+<meta property="og:image" content="https://zh7.wang/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/hexo/source/_posts/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/DenseNet.png">
+<meta property="og:image" content="https://cdn.kesci.com/upload/image/q5mjsq84o9.png?imageView2/0/w/960/h/960">
+<meta property="og:image" content="https://cdn.kesci.com/upload/image/q5mjt4r02n.png?imageView2/0/w/960/h/960">
+<meta property="article:published_time" content="2020-02-16T14:49:56.000Z">
+<meta property="article:modified_time" content="2020-02-18T13:25:54.385Z">
 <meta property="article:author" content="毛春">
+<meta property="article:tag" content="批量归一化和残差网络">
+<meta property="article:tag" content="凸优化">
+<meta property="article:tag" content="梯度下降">
+<meta property="article:tag" content="优化算法">
+<meta property="article:tag" content="词嵌入">
+<meta property="article:tag" content="文本分类">
+<meta property="article:tag" content="数据增强">
+<meta property="article:tag" content="模型微调">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zh7.wang/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/resNet.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -155,93 +172,415 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-动手学习深度学习-Task6-Task7-Task8" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/02/13/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/" class="archive-article-date">
-  	<time datetime="2020-02-13T14:21:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-13</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/02/13/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/">动手学习深度学习-Task03&amp;04&amp;05</a>
+    <h1 class="article-title" itemprop="name">
+      动手学习深度学习 Task6&amp;Task7&amp;Task8
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/" class="archive-article-date">
+  	<time datetime="2020-02-16T14:49:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>该文将对优化算法、批量归一化、残差网络、梯度下降方法、词嵌入、文本分类、数据增强和模型微调进行介绍，主要记录自己的理解。</p>
+<a id="more"></a>
+<h1 id="批量归一化和残差网络"><a href="#批量归一化和残差网络" class="headerlink" title="批量归一化和残差网络"></a>批量归一化和残差网络</h1><h2 id="批量归一化"><a href="#批量归一化" class="headerlink" title="批量归一化"></a>批量归一化</h2><h4 id="对输入的标准化（浅层模型）"><a href="#对输入的标准化（浅层模型）" class="headerlink" title="对输入的标准化（浅层模型）"></a>对输入的标准化（浅层模型）</h4><p>对输入的标准化，主要将输入向量的各个特征进行归一化，以使得各个特征的分布近似，避免因为各个特征的数值范围绝对大小对模型造成影响。往往大（绝对值大）范围的特征，占主导作用。</p>
+<h4 id="批量归一化（深度模型）"><a href="#批量归一化（深度模型）" class="headerlink" title="批量归一化（深度模型）"></a>批量归一化（深度模型）</h4><p>利用小批量的均值和标注差，不断对神经网络中间输出进行归一化，从而使得整个网络在各层输出数值稳定，缓解<strong>梯度消失和梯度爆炸</strong>问题。</p>
+<ol>
+<li><p>对全连接层做归一化：全连接层中的放射变换（这里可直接按照线性变换理解：$x = W\mu + b$）和激活函数之间。</p>
+<p><strong>批量归一化</strong>：</p>
+<script type="math/tex; mode=display">
+y^{(i)} = BacthNorm(x^{(i)})</script><script type="math/tex; mode=display">
+\mu_{B} = \frac{1}{m}\sum_{i=1}^{m} x^{(i)}</script><script type="math/tex; mode=display">
+\sigma^2_B = \frac{1}{m}\sum_{i=1}^{m}(x^{(i)} - \mu_B)^2,</script><script type="math/tex; mode=display">
+\hat{x}^{(i)} = \frac{x^{(i)} - \mu_B}{\sqrt{\sigma^2_B + \epsilon}}</script></li>
+</ol>
+<p>   这里$\epsilon&gt;0$是个很小的常数，保证分母大于零。</p>
+<script type="math/tex; mode=display">
+   y^{(i)} = \gamma \odot \hat{x}^{(i)} + \beta</script><p>   引入可学习参数：拉伸参数$\gamma$ 和 偏移参数 $\beta$。若$\gamma = \sqrt{\sigma^2_B+\epsilon}$， 和$\beta = \mu_B$，批量归一化无效。</p>
+<p>   <strong>注解：</strong>该参数，对归一化进行参数调整，以使得模型的归一化方法更好的适应特征。</p>
+<ol>
+<li><p>对卷积层做批量归一化</p>
+<p>位置：卷积计算之后，应用激活函数之前。</p>
+<p>如果卷积计算输出多个通道，我们需要对这些通道的输出分别做批量归一化，且每个通道都拥有独立的拉伸和偏移参数。 计算：对单通道(输出)，batchsize=m,卷积计算输出$= p\times q$ 对该通道中m×p×q个元素同时做批量归一化,<strong>使用相同的均值和方差</strong>。</p>
+</li>
+<li><p>预测时的批量归一化：</p>
+<ul>
+<li>训练：训练的时候使用较大的批量大小来获取更好的计算性能，这时批量内样本均值和方差的计算都较为准确。</li>
+<li>预测：但在预测的时候，我们可能使用很小的批量大小，甚至每次我们只对一个样本做预测，这时我们无法得到较为准确的均值和方差。对此，解决方法的训练批量归一化层时候维护一个移动平滑的样本均值和方差，保存起来在预测时使用。</li>
+</ul>
+</li>
+</ol>
+<p>PyTorch实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卷积层</span></span><br><span class="line">nn.BatchNorm2d(out_channels)</span><br><span class="line"><span class="comment"># 全连接层</span></span><br><span class="line">nn.BatchNorm1d(out_channels)s</span><br></pre></td></tr></table></figure>
+<h2 id="残差网络-ResNet"><a href="#残差网络-ResNet" class="headerlink" title="残差网络(ResNet)"></a>残差网络(ResNet)</h2><blockquote>
+<p>在深度CNN中，深度越大的层，其包含的信息也会更少，在层数增加到一定程度时，虽然之前随着层数的增加loss值会减小，但是继续增加层会产生信息缺失导致loss增大。基于此观点，设计了残差网络。</p>
+</blockquote>
+<h4 id="残差块"><a href="#残差块" class="headerlink" title="残差块"></a>残差块</h4><p>在统计学中，残差指预测值和观测值直接的差距（区别于误差：观测值和真实值之间的差距）。如下图，一个残差块可表示为$H(x) = F(x) + x$，有$F(x) = H(x) - x$，在单位映射中，y = x便是观测值，而$H(x)$是预测值，$F(x)$便对应于残差，因此叫做残差网络。</p>
+<p><img src="/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/resNet.png" alt="resNet" style="zoom: 80%;"></p>
+<p>从信息论的角度讲，由于DPI（数据处理不等式）的存在，在前向传输的过程中，随着层数的加深，Feature Map包含的图像信息会逐层减少，而ResNet的直接映射的加入，保证了 <img src="https://www.zhihu.com/equation?tex=l%2B1" alt="[公式]"> 层的网络一定比 <img src="https://www.zhihu.com/equation?tex=l" alt="[公式]"> 层包含更多的图像信息。基于这种使用直接映射来连接网络不同层直接的思想，残差网络应运而生。</p>
+<ul>
+<li>由于$x$和$x_{l+1}$的通道数不一致，需要用$1\times 1$的核调整通道数。</li>
+</ul>
+<p>PyTorch实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResidualBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init</span><span class="params">(self, in_channels, out_channels, use_1x1conv=False, stride=<span class="number">1</span>)</span>:</span></span><br><span class="line">        super(ResidualBlock, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">3</span>, stride=stride, padding=<span class="number">1</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(out_channels, out_channles, kernel_size, padding=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> use_1x1conv:</span><br><span class="line">            self.conv3 = nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">1</span>, stride=strid<span class="string">'e)</span></span><br><span class="line"><span class="string">        else:</span></span><br><span class="line"><span class="string">            self.conv3 = None</span></span><br><span class="line"><span class="string">        self.bn1 = nn.BatchNorm2d(out_channels)</span></span><br><span class="line"><span class="string">        self.bn2 = nn.BatchNorm2d(out_channels)</span></span><br><span class="line"><span class="string">                                   </span></span><br><span class="line"><span class="string">    def forward(self, X):</span></span><br><span class="line"><span class="string">        Y = F.relu(self.bn1(self.conv1(X)))</span></span><br><span class="line"><span class="string">        Y = self.bn2(self.conv2(Y))                           </span></span><br><span class="line"><span class="string">        if self.conv3:</span></span><br><span class="line"><span class="string">            X = self.conv3(X)</span></span><br><span class="line"><span class="string">        return F.relu(Y + X)</span></span><br></pre></td></tr></table></figure>
+<h4 id="ResNet模型"><a href="#ResNet模型" class="headerlink" title="ResNet模型"></a>ResNet模型</h4><p>卷积(64,7x7,3)<br>批量一体化<br>最大池化(3x3,2)</p>
+<p>残差块x4 (通过步幅为2的残差块在每个模块之间减小高和宽)</p>
+<p>全局平均池化</p>
+<p>全连接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">        nn.Conv2d(<span class="number">1</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>),</span><br><span class="line">        nn.BatchNorm2d(<span class="number">64</span>), </span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_block</span><span class="params">(in_channels, out_channels, num_residuals, first_block=False)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> first_block:</span><br><span class="line">        <span class="keyword">assert</span> in_channels == out_channels <span class="comment"># 第一个模块的通道数同输入通道数一致</span></span><br><span class="line">    blk = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_residuals):</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">not</span> first_block:</span><br><span class="line">            blk.append(Residual(in_channels, out_channels, use_1x1conv=<span class="literal">True</span>, stride=<span class="number">2</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            blk.append(Residual(out_channels, out_channels))</span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(*blk)</span><br><span class="line"></span><br><span class="line">net.add_module(<span class="string">"resnet_block1"</span>, resnet_block(<span class="number">64</span>, <span class="number">64</span>, <span class="number">2</span>, first_block=<span class="literal">True</span>))</span><br><span class="line">net.add_module(<span class="string">"resnet_block2"</span>, resnet_block(<span class="number">64</span>, <span class="number">128</span>, <span class="number">2</span>))</span><br><span class="line">net.add_module(<span class="string">"resnet_block3"</span>, resnet_block(<span class="number">128</span>, <span class="number">256</span>, <span class="number">2</span>))</span><br><span class="line">net.add_module(<span class="string">"resnet_block4"</span>, resnet_block(<span class="number">256</span>, <span class="number">512</span>, <span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="稠密连接网络（DenseNet）"><a href="#稠密连接网络（DenseNet）" class="headerlink" title="稠密连接网络（DenseNet）"></a>稠密连接网络（DenseNet）</h4><p><img src="/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/hexo\source\_posts\动手学习深度学习-Task03-04-05\DenseNet.png" alt="DenseNet" style="zoom:80%;"></p>
+<h6 id="主要构建模块"><a href="#主要构建模块" class="headerlink" title="主要构建模块"></a><strong>主要构建模块</strong></h6><p>稠密块（dense ）：定义了输入和输出是如何连结的</p>
+<p>过渡层：用来控制通道数，使之不过大</p>
+<h6 id="稠密快"><a href="#稠密快" class="headerlink" title="稠密快"></a>稠密快</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv_block</span><span class="params">(in_channels, out_channels)</span>:</span></span><br><span class="line">    blk = nn.Sequential(nn.BatchNorm2d(in_channels), </span><br><span class="line">                        nn.ReLU(),</span><br><span class="line">                        nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">return</span> blk</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DenseBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_convs, in_channels, out_channels)</span>:</span></span><br><span class="line">        super(DenseBlock, self).__init__()</span><br><span class="line">        net = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(num_convs):</span><br><span class="line">            in_c = in_channels + i * out_channels</span><br><span class="line">            net.append(conv_block(in_c, out_channels))</span><br><span class="line">        self.net = nn.ModuleList(net)</span><br><span class="line">        self.out_channels = in_channels + num_convs * out_channels <span class="comment"># 计算输出通道数</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> blk <span class="keyword">in</span> self.net:</span><br><span class="line">            Y = blk(X)</span><br><span class="line">            X = torch.cat((X, Y), dim=<span class="number">1</span>)  <span class="comment"># 在通道维上将输入和输出连结</span></span><br><span class="line">        <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<h6 id="过渡层"><a href="#过渡层" class="headerlink" title="过渡层"></a>过渡层</h6><p>$1 \times 1$卷积层：来减小通道数<br>步幅为2的平均池化层：减半高和宽</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">transition_block</span><span class="params">(in_channels, out_channels)</span>:</span></span><br><span class="line">    blk = nn.Sequential(</span><br><span class="line">            nn.BatchNorm2d(in_channels), </span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">1</span>),</span><br><span class="line">            nn.AvgPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>))</span><br><span class="line">    <span class="keyword">return</span> blk</span><br></pre></td></tr></table></figure>
+<h6 id="DenseNet模型"><a href="#DenseNet模型" class="headerlink" title="DenseNet模型"></a>DenseNet模型</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">        nn.Conv2d(<span class="number">1</span>, <span class="number">64</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">3</span>),</span><br><span class="line">        nn.BatchNorm2d(<span class="number">64</span>), </span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">num_channels, growth_rate = <span class="number">64</span>, <span class="number">32</span>  <span class="comment"># num_channels为当前的通道数</span></span><br><span class="line">num_convs_in_dense_blocks = [<span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, num_convs <span class="keyword">in</span> enumerate(num_convs_in_dense_blocks):</span><br><span class="line">    DB = DenseBlock(num_convs, num_channels, growth_rate)</span><br><span class="line">    net.add_module(<span class="string">"DenseBlosk_%d"</span> % i, DB)</span><br><span class="line">    <span class="comment"># 上一个稠密块的输出通道数</span></span><br><span class="line">    num_channels = DB.out_channels</span><br><span class="line">    <span class="comment"># 在稠密块之间加入通道数减半的过渡层</span></span><br><span class="line">    <span class="keyword">if</span> i != len(num_convs_in_dense_blocks) - <span class="number">1</span>:</span><br><span class="line">        net.add_module(<span class="string">"transition_block_%d"</span> % i, transition_block(num_channels, num_channels // <span class="number">2</span>))</span><br><span class="line">        num_channels = num_channels // <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">net.add_module(<span class="string">"BN"</span>, nn.BatchNorm2d(num_channels))</span><br><span class="line">net.add_module(<span class="string">"relu"</span>, nn.ReLU())</span><br><span class="line">net.add_module(<span class="string">"global_avg_pool"</span>, d2l.GlobalAvgPool2d()) <span class="comment"># GlobalAvgPool2d的输出: (Batch, num_channels, 1, 1)</span></span><br><span class="line">net.add_module(<span class="string">"fc"</span>, nn.Sequential(d2l.FlattenLayer(), nn.Linear(num_channels, <span class="number">10</span>))) </span><br><span class="line"></span><br><span class="line">X = torch.rand((<span class="number">1</span>, <span class="number">1</span>, <span class="number">96</span>, <span class="number">96</span>))</span><br><span class="line"><span class="keyword">for</span> name, layer <span class="keyword">in</span> net.named_children():</span><br><span class="line">    X = layer(X)</span><br><span class="line">    print(name, <span class="string">' output shape:\t'</span>, X.shape)</span><br></pre></td></tr></table></figure>
+<h1 id="凸优化"><a href="#凸优化" class="headerlink" title="凸优化"></a>凸优化</h1><blockquote>
+<p>深度学习中的优化问题和凸性问题</p>
+</blockquote>
+<h2 id="优化与深度学习"><a href="#优化与深度学习" class="headerlink" title="优化与深度学习"></a>优化与深度学习</h2><h4 id="优化与估计"><a href="#优化与估计" class="headerlink" title="优化与估计"></a>优化与估计</h4><blockquote>
+<p>优化与深度学习任务关系：</p>
+<p>优化主要是针对训练集对损失函数优化，找到其最小值，而深度学习是要获得最小的泛化误差。</p>
+<ul>
+<li>优化指出了深度学习挑战：局部最小、鞍点、梯度消失</li>
+<li>关于凸性的知识不进行赘述。</li>
+</ul>
+</blockquote>
+<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><h2 id="梯度下降-1"><a href="#梯度下降-1" class="headerlink" title="梯度下降"></a>梯度下降</h2><p>梯度下降算法原理已经很熟悉，这里主要对概念进行辨析：</p>
+<ul>
+<li>梯度下降：在权值更新前，对所有样例汇总误差，计算梯度，以梯度的反方向进行梯度下降。<ul>
+<li>标准梯度下降中，权值更新的每一步对多个样例求和，这需要大量的计算。</li>
+<li>标准梯度下降中，由于使用真正的梯度，标准梯度下降对于每一步权值更新一般使用比随机梯度下降大的步长(因为真的东西可以胆大一点)</li>
+</ul>
+</li>
+<li><p>随机梯度下降：随机梯度下降的权值是通过考查某个训练样例来更新的。</p>
+<ul>
+<li>如果标准误差曲面有多个局部极小值，随机梯度下降有时可能避免陷入这些局部极小值中。</li>
+<li>使用较小的步长，因不确定性高。</li>
+</ul>
+</li>
+<li><p>小批量随机梯度下降：小批量随机梯度下降是介于标准梯度下降和随机梯度下降中的一种方法</p>
+<ul>
+<li>一方面，可以调整batch_size的大小，以对模型计算量进行调整</li>
+<li>另一方面，可以使用相对SGD较大的学习率</li>
+</ul>
+</li>
+<li>动态学习率，在模型开始学习时，其梯度大多来源于有效的数据特征，可以采用较大的学习率增大步长，来加快模型收敛。而随着训练的进行，噪声对梯度的占比增大，应当逐渐减小学习率，缓解过拟合。</li>
+</ul>
+<h1 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h1><h2 id="SGD-Momentum"><a href="#SGD-Momentum" class="headerlink" title="SGD Momentum"></a>SGD Momentum</h2><p>对于梯度下降算法，主要存在以下问题：</p>
+<ul>
+<li>训练后期，noisy gradient对收敛性影响很大，需要谨慎选取学习率和批量大小，来控制收敛效果，避免过拟合。</li>
+<li>对于不同的特征，其对应的梯度大小也不一致。参数大的特征，其获得梯度也大；而参数小的特征获得的梯度也小。大的梯度会发生大的“震荡”（想象学习率太大的状况），而小的梯度步长会很小，最后难以收敛。</li>
+</ul>
+<h6 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h6><p>动量法的提出是为了解决梯度下降的上述问题。设时间步 t 的自变量为 xt，学习率为 ηt。 在时间步 $t=0$，动量法创建速度变量 $m_0$，并将其元素初始化成 $0$。在时间步 $t&gt;0$，动量法对每次迭代的步骤做如下修改：</p>
+<script type="math/tex; mode=display">
+m_t = \beta m_{t-1} + \eta_tg_t</script><script type="math/tex; mode=display">
+x_t = x_{t-1} - m_t</script><p>另一种方式：</p>
+<script type="math/tex; mode=display">
+m_t = \beta m_{t-1} + (1-\beta)g_t</script><script type="math/tex; mode=display">
+x_t = x_{t-1} - \alpha_t m_t</script><script type="math/tex; mode=display">
+\alpha_t = \frac{\eta_t}{1-\beta}</script><p>其中，动量超参数 β满足 0≤β&lt;1。当 β=0 时，动量法等价于小批量随机梯度下降。在动量法中，自变量在各个方向上的移动幅度不仅取决当前梯度，还取决于过去的各个梯度在各个方向上是否一致。这样，我们就可以使用较大的学习率，从而使自变量向最优解更快移动。</p>
+<h6 id="PyTorch-Class"><a href="#PyTorch-Class" class="headerlink" title="PyTorch Class"></a>PyTorch Class</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.optim.SGD(parameters, lr, momentum)</span><br></pre></td></tr></table></figure>
+<h2 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a>AdaGrad</h2><p>本节我们介绍AdaGrad算法，它根据自变量在每个维度的梯度值的大小来调整各个维度上的学习率，从而避免统一的学习率难以适应所有维度的问题</p>
+<h6 id="算法-1"><a href="#算法-1" class="headerlink" title="算法"></a>算法</h6><p>AdaGrad算法会使用一个小批量随机梯度$g_t$按元素平方的累加变量$s_t$。在时间步0，AdaGrad将$s_0$中每个元素初始化为$0$。在时间步$t$，首先将小批量随机梯度$g_t$按元素平方后累加到变量$s_t$：</p>
+<script type="math/tex; mode=display">
+s_t = s_{t-1} + g_t \odot g_t,</script><p>其中$\odot $是按元素相乘。接着，我们将目标函数自变量中每个元素的学习率通过按元素运算重新调整一下：</p>
+<script type="math/tex; mode=display">
+x_t = x_{t-1} - \frac{\eta}{\sqrt{s_t + \epsilon}}\odot g_t</script><h6 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h6><p>需要强调的是，小批量随机梯度按元素平方的累加变量$s_t$出现在学习率的分母项中。因此，如果目标函数有关自变量中某个元素的偏导数一直都较大，那么该元素的学习率将下降较快；反之，如果目标函数有关自变量中某个元素的偏导数一直都较小，那么该元素的学习率将下降较慢。然而，由于$s_t$一直在累加按元素平方的梯度，自变量中每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，AdaGrad算法在迭代后期由于学习率过小，可能较难找到一个有用的解。</p>
+<h6 id="Pytorch-Class"><a href="#Pytorch-Class" class="headerlink" title="Pytorch Class"></a>Pytorch Class</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.optim.Adagrad(parameters, lr)</span><br></pre></td></tr></table></figure>
+<h2 id="RMSprob"><a href="#RMSprob" class="headerlink" title="RMSprob"></a>RMSprob</h2><p>我们在AdaGrad算法一节中提到，因为调整学习率时分母上的变量st一直在累加按元素平方的小批量随机梯度，所以目标函数自变量每个元素的学习率在迭代过程中一直在降低（或不变）。因此，当学习率在迭代早期降得较快且当前解依然不佳时，AdaGrad算法在迭代后期由于学习率过小，可能较难找到一个有用的解。为了解决这一问题，RMSProp算法对AdaGrad算法做了修改。</p>
+<h6 id="算法-2"><a href="#算法-2" class="headerlink" title="算法"></a>算法</h6><p>我们在动量法一节里介绍过指数加权移动平均。不同于AdaGrad算法里状态变量st是截至时间步$t$所有小批量随机梯度$g_t$按元素平方和，RMSProp算法将这些梯度按元素平方做指数加权移动平均。具体来说，给定超参数$0≤γ_0$计算</p>
+<script type="math/tex; mode=display">
+v_t = \beta v_{t-1} + (1-\beta)g_t\odot g_t.</script><script type="math/tex; mode=display">
+ x_t = x_{t-1} - \frac{\alpha}{\sqrt{v_t+\epsilon}}\odot g_t</script><h6 id="PyTorch-Class-1"><a href="#PyTorch-Class-1" class="headerlink" title="PyTorch Class"></a>PyTorch Class</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.optim.RMSprop(parameters, lr, alpha)</span><br></pre></td></tr></table></figure>
+<h2 id="AdaDelta"><a href="#AdaDelta" class="headerlink" title="AdaDelta"></a>AdaDelta</h2><p>除了RMSProp算法以外，另一个常用优化算法AdaDelta算法也针对AdaGrad算法在迭代后期可能较难找到有用解的问题做了改进 。有意思的是，AdaDelta算法没有学习率这一超参数。</p>
+<h6 id="算法-3"><a href="#算法-3" class="headerlink" title="算法"></a>算法</h6><p>AdaDelta算法也像RMSProp算法一样，使用了小批量随机梯度$g_t$按元素平方的指数加权移动平均变量$s_t$。在时间步0，它的所有元素被初始化为0。给定超参数$0≤ρ$，同RMSProp算法一样计算</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s}_t \leftarrow \rho \boldsymbol{s}_{t-1} + (1 - \rho) \boldsymbol{g}_t \odot \boldsymbol{g}_t.</script><p>与RMSProp算法不同的是，AdaDelta算法还维护一个额外的状态变量$Δx_t$，其元素同样在时间步$0$时被初始化为$0$。我们使用$Δx_{t−1}$来计算自变量的变化量：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{g}_t' \leftarrow \sqrt{\frac{\Delta\boldsymbol{x}_{t-1} + \epsilon}{\boldsymbol{s}_t + \epsilon}}   \odot \boldsymbol{g}_t,</script><p>其中ϵ是为了维持数值稳定性而添加的常数，如$10^{−5}$。接着更新自变量：</p>
+<script type="math/tex; mode=display">
+x_t = x_{t-1} - g_t'.</script><p>最后，我们使用$Δx_t$来记录自变量变化量$g_t’$按元素平方的指数加权移动平均：</p>
+<script type="math/tex; mode=display">
+\Delta\boldsymbol{x}_t \leftarrow \rho \Delta\boldsymbol{x}_{t-1} + (1 - \rho) \boldsymbol{g}'_t \odot \boldsymbol{g}'_t.</script><p>可以看到，如不考虑$ϵ$的影响，AdaDelta算法与RMSProp算法的不同之处在于使用$Δx_{t−1}$来替代超参数$η$。</p>
+<h6 id="Pytorch-Class-1"><a href="#Pytorch-Class-1" class="headerlink" title="Pytorch Class"></a>Pytorch Class</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.optim.Adadelta(parameters, rho)</span><br></pre></td></tr></table></figure>
+<h2 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h2><p>Adam算法在RMSProp算法基础上对小批量随机梯度也做了指数加权移动平均 。下面我们来介绍这个算法。</p>
+<h6 id="算法-4"><a href="#算法-4" class="headerlink" title="算法"></a>算法</h6><p>Adam算法使用了动量变量$m_t$和RMSProp算法中小批量随机梯度按元素平方的指数加权移动平均变量$v_t$，并在时间步$0$将它们中每个元素初始化为$0$。给定超参数$0≤β_1&lt;1$（算法作者建议设为0.9），时间步t的动量变量$m_t$即小批量随机梯度$g_t$的指数加权移动平均：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{m}_t \leftarrow \beta_1 \boldsymbol{m}_{t-1} + (1 - \beta_1) \boldsymbol{g}_t.</script><p>和RMSProp算法中一样，给定超参数$0≤β_2&lt;1$（算法作者建议设为0.999）， 将小批量随机梯度按元素平方后的项$g_t⊙g_t$做指数加权移动平均得到$v_t$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{v}_t \leftarrow \beta_2 \boldsymbol{v}_{t-1} + (1 - \beta_2) \boldsymbol{g}_t \odot \boldsymbol{g}_t.</script><p>由于我们将$m_0$和$s_0$中的元素都初始化为$0$， 在时间步$t$我们得到$m_t=(1−β_1)∑_{i=1}^tβ_1^{t−i}g_i$。将过去各时间步小批量随机梯度的权值相加，得到 $(1−β_1)∑_{i=1}^tβ_1^{t−i} = 1−β_1^t$。需要注意的是，当$t$较小时，过去各时间步小批量随机梯度权值之和会较小。例如，当$β_1=0.9$时，$m_1=0.1g_1$。为了消除这样的影响，对于任意时间步$t$，我们可以将$m_t$再除以$1−β_1^t$，从而使过去各时间步小批量随机梯度权值之和为$1$。这也叫作偏差修正。在Adam算法中，我们对变量$m_t$和$v_t$均作偏差修正：</p>
+<script type="math/tex; mode=display">
+\hat{\boldsymbol{m}}_t \leftarrow \frac{\boldsymbol{m}_t}{1 - \beta_1^t},</script><script type="math/tex; mode=display">
+\hat{\boldsymbol{v}}_t \leftarrow \frac{\boldsymbol{v}_t}{1 - \beta_2^t}.</script><p>接下来，Adam算法使用以上偏差修正后的变量$\hat{m}_t$和$\hat{m}_t$，将模型参数中每个元素的学习率通过按元素运算重新调整：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{g}_t' \leftarrow \frac{\eta \hat{\boldsymbol{m}}_t}{\sqrt{\hat{\boldsymbol{v}}_t} + \epsilon},</script><p>其中$η$是学习率，$ϵ$是为了维持数值稳定性而添加的常数，如$10^{−8}$。和AdaGrad算法、RMSProp算法以及AdaDelta算法一样，目标函数自变量中每个元素都分别拥有自己的学习率。最后，使用$g_t’$迭代自变量：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \boldsymbol{g}_t'.</script><h6 id="PyTorch-Class-2"><a href="#PyTorch-Class-2" class="headerlink" title="PyTorch Class"></a>PyTorch Class</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.optim.Adam(parameters, lr)</span><br></pre></td></tr></table></figure>
+<h1 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h1><h2 id="词嵌入基础"><a href="#词嵌入基础" class="headerlink" title="词嵌入基础"></a>词嵌入基础</h2><p>我们在循环神经网络的从零开始实现一节中使用 one-hot 向量表示单词，虽然它们构造起来很容易，但通常并不是一个好选择。一个主要的原因是，one-hot 词向量无法准确表达不同词之间的相似度，如我们常常使用的余弦相似度。</p>
+<p>Word2Vec 词嵌入工具的提出正是为了解决上面这个问题，它将每个词表示成一个定长的向量，并通过在语料库上的预训练使得这些向量能较好地表达不同词之间的相似和类比关系，以引入一定的语义信息。基于两种概率模型的假设，我们可以定义两种 Word2Vec 模型：</p>
+<ol>
+<li><a href="https://zh.d2l.ai/chapter_natural-language-processing/word2vec.html#跳字模型" target="_blank" rel="noopener">Skip-Gram 跳字模型</a>：假设背景词由中心词生成，即建模 P(wo∣wc)，其中 wc 为中心词，wo 为任一背景词；</li>
+</ol>
+<p><img src="https://cdn.kesci.com/upload/image/q5mjsq84o9.png?imageView2/0/w/960/h/960" alt="Image Name"></p>
+<ol>
+<li><a href="https://zh.d2l.ai/chapter_natural-language-processing/word2vec.html#连续词袋模型" target="_blank" rel="noopener">CBOW (continuous bag-of-words) 连续词袋模型</a>：假设中心词由背景词生成，即建模 P(wc∣Wo)，其中 Wo 为背景词的集合。</li>
+</ol>
+<p><img src="https://cdn.kesci.com/upload/image/q5mjt4r02n.png?imageView2/0/w/960/h/960" alt="Image Name"></p>
+<p>在这里我们主要介绍 Skip-Gram 模型的实现，CBOW 实现与其类似，读者可之后自己尝试实现。后续的内容将大致从以下四个部分展开：</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢支持<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/myself/aipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/myself/weichat.png">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+	  
+		<span id="busuanzi_container_page_pv">
+		  ⋉(●本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次●)⋊
+		</span>
+	  
+	
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">LSTM&GRU&深度RNN&双向RNN</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">批量归一化和残差网络</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过拟合与欠拟合</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">凸优化</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">梯度消失与梯度爆炸</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">梯度下降</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">机器翻译相关技术</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">优化算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">注意力机制与Seq2Seq模型</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">词嵌入</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Transformer</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">文本分类</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">卷积神经网络基础</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据增强</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">leNET</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">卷积神经网络进阶</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">模型微调</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://zh7.wang/2020/02/16/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task6-Task7-Task8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/02/13/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Task03-04-05/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">动手学习深度学习-Task03&amp;04&amp;05</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#批量归一化和残差网络"><span class="toc-number">1.</span> <span class="toc-text">批量归一化和残差网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#批量归一化"><span class="toc-number">1.1.</span> <span class="toc-text">批量归一化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#对输入的标准化（浅层模型）"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">对输入的标准化（浅层模型）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#批量归一化（深度模型）"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">批量归一化（深度模型）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#残差网络-ResNet"><span class="toc-number">1.2.</span> <span class="toc-text">残差网络(ResNet)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#残差块"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">残差块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ResNet模型"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">ResNet模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#稠密连接网络（DenseNet）"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">稠密连接网络（DenseNet）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#主要构建模块"><span class="toc-number">1.2.0.3.0.1.</span> <span class="toc-text">主要构建模块</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#稠密快"><span class="toc-number">1.2.0.3.0.2.</span> <span class="toc-text">稠密快</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#过渡层"><span class="toc-number">1.2.0.3.0.3.</span> <span class="toc-text">过渡层</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#DenseNet模型"><span class="toc-number">1.2.0.3.0.4.</span> <span class="toc-text">DenseNet模型</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#凸优化"><span class="toc-number">2.</span> <span class="toc-text">凸优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#优化与深度学习"><span class="toc-number">2.1.</span> <span class="toc-text">优化与深度学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优化与估计"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">优化与估计</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#梯度下降"><span class="toc-number">3.</span> <span class="toc-text">梯度下降</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#梯度下降-1"><span class="toc-number">3.1.</span> <span class="toc-text">梯度下降</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#优化算法"><span class="toc-number">4.</span> <span class="toc-text">优化算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SGD-Momentum"><span class="toc-number">4.1.</span> <span class="toc-text">SGD Momentum</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#算法"><span class="toc-number">4.1.0.0.0.1.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#PyTorch-Class"><span class="toc-number">4.1.0.0.0.2.</span> <span class="toc-text">PyTorch Class</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AdaGrad"><span class="toc-number">4.2.</span> <span class="toc-text">AdaGrad</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#算法-1"><span class="toc-number">4.2.0.0.0.1.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#说明"><span class="toc-number">4.2.0.0.0.2.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Pytorch-Class"><span class="toc-number">4.2.0.0.0.3.</span> <span class="toc-text">Pytorch Class</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMSprob"><span class="toc-number">4.3.</span> <span class="toc-text">RMSprob</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#算法-2"><span class="toc-number">4.3.0.0.0.1.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#PyTorch-Class-1"><span class="toc-number">4.3.0.0.0.2.</span> <span class="toc-text">PyTorch Class</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AdaDelta"><span class="toc-number">4.4.</span> <span class="toc-text">AdaDelta</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#算法-3"><span class="toc-number">4.4.0.0.0.1.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Pytorch-Class-1"><span class="toc-number">4.4.0.0.0.2.</span> <span class="toc-text">Pytorch Class</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adam"><span class="toc-number">4.5.</span> <span class="toc-text">Adam</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#算法-4"><span class="toc-number">4.5.0.0.0.1.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#PyTorch-Class-2"><span class="toc-number">4.5.0.0.0.2.</span> <span class="toc-text">PyTorch Class</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Word2vec"><span class="toc-number">5.</span> <span class="toc-text">Word2vec</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#词嵌入基础"><span class="toc-number">5.1.</span> <span class="toc-text">词嵌入基础</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+
 
     
+        <section id="comments" class="comments">
+          <style>
+            .comments{margin:30px;padding:10px;background:#fff}
+            @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+          </style>
+          <div id="vcomment" class="comment"></div> 
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    var notify = 'false' == true ? true : false;
+    var verify = 'false' == true ? true : false;
+    new Valine({
+        av: AV,
+        el: '#vcomment',
+        notify: notify,
+        app_id: "m2zsRB66KA4xbH7b5IR5vEUN-gzGzoHsz",
+        app_key: "BqH0PIWEoz2Ntu0oFgUB6IBg",
+        placeholder: "Just go go",
+        avatar:"mm",
+    });
+</script>
+      </section>
+    
 
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
 
           </div>
         </div>
@@ -268,9 +607,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: false,
